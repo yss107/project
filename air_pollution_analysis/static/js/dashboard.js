@@ -647,3 +647,318 @@ function updateAlerts(nycData, bogotaData) {
         alertsContainer.innerHTML = html;
     }
 }
+
+// ===== WORLDWIDE CITY SEARCH FUNCTIONS =====
+
+async function searchCity() {
+    const cityInput = document.getElementById('city-search');
+    const cityName = cityInput.value.trim();
+    
+    if (!cityName) {
+        alert('Please enter a city name');
+        return;
+    }
+    
+    const resultDiv = document.getElementById('search-result');
+    const escapedCityName = cityName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    resultDiv.innerHTML = '<div class="loading">Searching for ' + escapedCityName + '...</div>';
+    
+    try {
+        const response = await fetch(`/api/worldwide/search/${encodeURIComponent(cityName)}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+            displayCityResult(data);
+        } else {
+            resultDiv.innerHTML = `<div class="error">❌ ${data.error || 'City not found'}</div>`;
+        }
+    } catch (error) {
+        console.error('Error searching city:', error);
+        resultDiv.innerHTML = '<div class="error">❌ Error searching city. Please try again.</div>';
+    }
+}
+
+function displayCityResult(data) {
+    const resultDiv = document.getElementById('search-result');
+    const location = data.location;
+    const airQuality = data.air_quality;
+    const aqi = airQuality.aqi_level;
+    
+    const complianceStatus = airQuality.who_pm25_compliant ? 
+        '<span class="badge badge-success">✓ WHO Compliant</span>' : 
+        '<span class="badge badge-danger">✗ Exceeds WHO Guidelines</span>';
+    
+    const html = `
+        <div class="city-result-card">
+            <div class="city-header">
+                <h3>${location.name}, ${location.country}</h3>
+                <span class="aqi-badge" style="background-color: ${aqi.color}">
+                    AQI: ${airQuality.aqi} - ${aqi.level}
+                </span>
+            </div>
+            
+            <div class="coordinates">
+                📍 Coordinates: ${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}
+            </div>
+            
+            <div class="air-quality-metrics">
+                <div class="metric-grid">
+                    <div class="metric">
+                        <div class="metric-label">PM2.5</div>
+                        <div class="metric-value">${airQuality.pm2_5.toFixed(2)}</div>
+                        <div class="metric-unit">µg/m³</div>
+                        ${airQuality.who_pm25_compliant ? 
+                            '<div class="metric-status good">✓ WHO Safe</div>' : 
+                            '<div class="metric-status bad">✗ Above WHO limit</div>'}
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-label">PM10</div>
+                        <div class="metric-value">${airQuality.pm10.toFixed(2)}</div>
+                        <div class="metric-unit">µg/m³</div>
+                        ${airQuality.who_pm10_compliant ? 
+                            '<div class="metric-status good">✓ WHO Safe</div>' : 
+                            '<div class="metric-status bad">✗ Above WHO limit</div>'}
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-label">NO₂</div>
+                        <div class="metric-value">${airQuality.no2.toFixed(2)}</div>
+                        <div class="metric-unit">µg/m³</div>
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-label">SO₂</div>
+                        <div class="metric-value">${airQuality.so2.toFixed(2)}</div>
+                        <div class="metric-unit">µg/m³</div>
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-label">CO</div>
+                        <div class="metric-value">${(airQuality.co / 1000).toFixed(2)}</div>
+                        <div class="metric-unit">mg/m³</div>
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-label">O₃</div>
+                        <div class="metric-value">${airQuality.o3.toFixed(2)}</div>
+                        <div class="metric-unit">µg/m³</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-footer">
+                <div class="timestamp">🕐 Updated: ${new Date(airQuality.timestamp).toLocaleString()}</div>
+                <button onclick="viewForecast('${location.name}')" class="forecast-button">📈 View Forecast</button>
+            </div>
+        </div>
+    `;
+    
+    resultDiv.innerHTML = html;
+}
+
+async function viewForecast(cityName) {
+    const resultDiv = document.getElementById('search-result');
+    const currentContent = resultDiv.innerHTML;
+    
+    try {
+        const response = await fetch(`/api/worldwide/forecast/${encodeURIComponent(cityName)}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+            displayForecast(data);
+        } else {
+            alert('Unable to fetch forecast: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        console.error('Error fetching forecast:', error);
+        alert('Error fetching forecast. Please try again.');
+    }
+}
+
+function displayForecast(data) {
+    const location = data.location;
+    const forecast = data.forecast;
+    
+    // Prepare data for Plotly
+    const timestamps = forecast.map(f => new Date(f.timestamp));
+    const pm25Values = forecast.map(f => f.pm2_5);
+    const pm10Values = forecast.map(f => f.pm10);
+    const aqiValues = forecast.map(f => f.aqi);
+    
+    const trace1 = {
+        x: timestamps,
+        y: pm25Values,
+        name: 'PM2.5',
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#3498db' }
+    };
+    
+    const trace2 = {
+        x: timestamps,
+        y: pm10Values,
+        name: 'PM10',
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#e74c3c' }
+    };
+    
+    const layout = {
+        title: `24-Hour Air Quality Forecast - ${location.name}, ${location.country}`,
+        xaxis: { title: 'Time' },
+        yaxis: { title: 'Concentration (µg/m³)' },
+        hovermode: 'x unified'
+    };
+    
+    // Create a modal or update the result area
+    const modalHtml = `
+        <div class="forecast-modal">
+            <div class="forecast-content">
+                <button onclick="closeForecast()" class="close-button">✕</button>
+                <div id="forecast-chart"></div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    Plotly.newPlot('forecast-chart', [trace1, trace2], layout);
+}
+
+function closeForecast() {
+    const modal = document.querySelector('.forecast-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+async function loadPopularCities() {
+    const container = document.getElementById('popular-cities');
+    
+    try {
+        const response = await fetch('/api/worldwide/popular-cities');
+        const data = await response.json();
+        
+        if (response.ok) {
+            displayPopularCities(data.cities);
+        } else {
+            container.innerHTML = '<div class="error">Unable to load popular cities</div>';
+        }
+    } catch (error) {
+        console.error('Error loading popular cities:', error);
+        container.innerHTML = '<div class="error">Error loading data</div>';
+    }
+}
+
+function displayPopularCities(cities) {
+    const container = document.getElementById('popular-cities');
+    
+    const html = cities.map(cityData => {
+        const location = cityData.location;
+        const airQuality = cityData.air_quality;
+        const aqi = airQuality.aqi_level;
+        
+        return `
+            <div class="popular-city-card" style="border-left: 4px solid ${aqi.color}">
+                <div class="city-name">${location.name}</div>
+                <div class="city-country">${location.country}</div>
+                <div class="aqi-badge-small" style="background-color: ${aqi.color}">
+                    ${aqi.level}
+                </div>
+                <div class="city-metrics">
+                    <span>PM2.5: ${airQuality.pm2_5.toFixed(1)}</span>
+                    <span>PM10: ${airQuality.pm10.toFixed(1)}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = html;
+}
+
+function loadWorldMap() {
+    const mapDiv = document.getElementById('world-map');
+    
+    // Fetch popular cities data to show on map
+    fetch('/api/worldwide/popular-cities')
+        .then(response => response.json())
+        .then(data => {
+            if (data.cities) {
+                displayWorldMap(data.cities);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading map data:', error);
+            mapDiv.innerHTML = '<div class="error">Unable to load map</div>';
+        });
+}
+
+function displayWorldMap(cities) {
+    const lats = cities.map(c => c.location.lat);
+    const lons = cities.map(c => c.location.lon);
+    const names = cities.map(c => c.location.name);
+    const pm25Values = cities.map(c => c.air_quality.pm2_5);
+    const aqiLevels = cities.map(c => c.air_quality.aqi_level.level);
+    const colors = cities.map(c => c.air_quality.aqi_level.color);
+    
+    const trace = {
+        type: 'scattergeo',
+        mode: 'markers',
+        lat: lats,
+        lon: lons,
+        text: names.map((name, i) => 
+            `${name}<br>PM2.5: ${pm25Values[i].toFixed(1)} µg/m³<br>Status: ${aqiLevels[i]}`
+        ),
+        marker: {
+            size: pm25Values.map(v => Math.min(v, 100) / 3 + 5),
+            color: colors,
+            line: {
+                color: 'white',
+                width: 1
+            }
+        },
+        name: 'Air Quality'
+    };
+    
+    const layout = {
+        title: 'Global Air Quality Monitor',
+        geo: {
+            projection: {
+                type: 'natural earth'
+            },
+            showland: true,
+            landcolor: '#f0f0f0',
+            showocean: true,
+            oceancolor: '#e0f4ff',
+            showcountries: true,
+            countrycolor: '#cccccc'
+        },
+        height: 500
+    };
+    
+    Plotly.newPlot('world-map', [trace], layout);
+}
+
+// Add event listener for Enter key in search box
+document.addEventListener('DOMContentLoaded', function() {
+    const citySearch = document.getElementById('city-search');
+    if (citySearch) {
+        citySearch.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchCity();
+            }
+        });
+    }
+    
+    // Load popular cities and map when worldwide tab is opened
+    const worldwideTab = document.querySelector('[onclick="showTab(\'worldwide\')"]');
+    if (worldwideTab) {
+        worldwideTab.addEventListener('click', function() {
+            setTimeout(() => {
+                loadPopularCities();
+                loadWorldMap();
+            }, 100);
+        });
+    }
+});
