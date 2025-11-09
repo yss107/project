@@ -660,7 +660,8 @@ async function searchCity() {
     }
     
     const resultDiv = document.getElementById('search-result');
-    resultDiv.innerHTML = '<div class="loading">Searching for ' + cityName + '...</div>';
+    const escapedCityName = cityName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    resultDiv.innerHTML = '<div class="loading">Searching for ' + escapedCityName + '...</div>';
     
     try {
         const response = await fetch(`/api/worldwide/search/${encodeURIComponent(cityName)}`);
