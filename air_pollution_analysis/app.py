@@ -39,7 +39,8 @@ def get_stats(city):
         stats = analyzer.get_basic_stats(city)
         return jsonify(stats)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error getting stats: {e}")
+        return jsonify({'error': 'Unable to retrieve statistics'}), 500
 
 @app.route('/api/timeseries/<city>/<pollutant>')
 def get_timeseries(city, pollutant):
@@ -50,7 +51,8 @@ def get_timeseries(city, pollutant):
         sampled_data = data[::6]
         return jsonify(sampled_data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error getting time series: {e}")
+        return jsonify({'error': 'Unable to retrieve time series data'}), 500
 
 @app.route('/api/daily/<city>/<pollutant>')
 def get_daily(city, pollutant):
@@ -59,7 +61,8 @@ def get_daily(city, pollutant):
         data = analyzer.get_daily_averages(city, pollutant)
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error getting daily averages: {e}")
+        return jsonify({'error': 'Unable to retrieve daily data'}), 500
 
 @app.route('/api/hourly/<city>/<pollutant>')
 def get_hourly(city, pollutant):
@@ -68,7 +71,8 @@ def get_hourly(city, pollutant):
         data = analyzer.get_hourly_pattern(city, pollutant)
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error getting hourly pattern: {e}")
+        return jsonify({'error': 'Unable to retrieve hourly pattern'}), 500
 
 @app.route('/api/monthly/<city>/<pollutant>')
 def get_monthly(city, pollutant):
@@ -77,7 +81,8 @@ def get_monthly(city, pollutant):
         data = analyzer.get_monthly_pattern(city, pollutant)
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error getting monthly pattern: {e}")
+        return jsonify({'error': 'Unable to retrieve monthly pattern'}), 500
 
 @app.route('/api/compare')
 def compare():
@@ -89,7 +94,8 @@ def compare():
         data['comparison_data'] = sampled_comparison
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error comparing cities: {e}")
+        return jsonify({'error': 'Unable to retrieve comparison data'}), 500
 
 @app.route('/api/who-limits/<city>')
 def who_limits(city):
@@ -98,7 +104,8 @@ def who_limits(city):
         data = analyzer.check_who_limits(city)
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error checking WHO limits: {e}")
+        return jsonify({'error': 'Unable to retrieve WHO compliance data'}), 500
 
 @app.route('/api/summary')
 def summary():
@@ -110,7 +117,8 @@ def summary():
             data['comparison']['comparison_data'] = data['comparison']['comparison_data'][::20]
         return jsonify(data)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error getting summary: {e}")
+        return jsonify({'error': 'Unable to retrieve summary data'}), 500
 
 @app.route('/api/realtime/<city>')
 def get_realtime(city):
@@ -154,7 +162,8 @@ def get_realtime(city):
         
         return jsonify(result)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Error getting real-time data: {e}")
+        return jsonify({'error': 'Unable to retrieve real-time data'}), 500
 
 @app.route('/api/realtime/stream')
 def stream_realtime():
