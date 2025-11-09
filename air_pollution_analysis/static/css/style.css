@@ -330,3 +330,135 @@ footer p {
     min-height: 400px;
     width: 100%;
 }
+
+/* Real-time Monitor Styles */
+.realtime-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.realtime-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #27ae60;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.realtime-card {
+    position: relative;
+}
+
+.realtime-data {
+    padding: 20px;
+}
+
+.pm-reading {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pm-value {
+    font-size: 3em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.pm-label {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.pm-unit {
+    font-size: 0.5em;
+    color: #999;
+}
+
+.aqi-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.trend-indicator {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+.compliance-status {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.compliance-status.compliant {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.compliance-status.non-compliant {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-item {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+.alert-item.critical {
+    background-color: #f8d7da;
+    border-left-color: #dc3545;
+}
+
+.alert-item strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.no-alerts {
+    color: #666;
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+}
+
+#realtime-chart {
+    min-height: 300px;
+}
+
+.pm-secondary {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}

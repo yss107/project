@@ -12,18 +12,27 @@ This project analyzes air pollution data from two monitoring stations:
 
 ## ✨ Features
 
-### 1. **Interactive Dashboard**
+### 1. **🔴 Real-Time Air Quality Monitor** (NEW!)
+- **Live monitoring** with auto-updating pollution readings every 5 seconds
+- **Current PM2.5 and PM10 levels** for both cities
+- **AQI category badges** with color-coded air quality levels
+- **WHO compliance indicators** showing real-time compliance status
+- **Live trends chart** displaying last 10 updates
+- **Active alerts system** warning when pollution exceeds WHO thresholds
+- Server-Sent Events (SSE) for efficient real-time data streaming
+
+### 2. **Interactive Dashboard**
 - Modern, responsive web interface
 - Real-time data visualization using Plotly.js
 - Multiple analysis views with tabbed navigation
 
-### 2. **Comprehensive Analysis**
+### 3. **Comprehensive Analysis**
 - **Time Series Analysis**: Hourly and daily pollution trends
 - **Pattern Recognition**: Hourly and monthly pollution patterns
 - **City Comparison**: Direct comparison between NYC and Bogota
 - **WHO Compliance**: Check against World Health Organization air quality guidelines
 
-### 3. **Key Insights**
+### 4. **Key Insights**
 - Statistical summaries (mean, median, std dev, min/max)
 - Correlation analysis between cities
 - Seasonal pattern detection
@@ -68,6 +77,14 @@ This project analyzes air pollution data from two monitoring stations:
 
 ## 📊 Dashboard Sections
 
+### 🔴 Real-Time Monitor Tab (NEW!)
+- **Live Air Quality Readings**: Current PM2.5 and PM10 levels updated every 5 seconds
+- **AQI Categories**: Color-coded air quality indicators (Good, Moderate, Unhealthy, etc.)
+- **WHO Compliance Status**: Real-time compliance with WHO guidelines
+- **Active Alerts**: Warnings when pollution exceeds safe thresholds
+- **Live Trends**: Visual chart showing pollution changes over the last 10 updates
+- **Rush Hour Detection**: Simulates higher pollution during peak traffic hours
+
 ### Overview Tab
 - Quick statistics for both cities
 - Key insights and comparisons
@@ -104,10 +121,12 @@ This project analyzes air pollution data from two monitoring stations:
 - **PM10 24-hour Mean**: ≤ 45 μg/m³
 
 ### Key Findings
-1. **Pollution Levels**: Analysis shows average pollution levels and variability in both cities
-2. **Temporal Patterns**: Identifies when pollution is highest/lowest during the day and year
-3. **Comparative Analysis**: Shows correlation and differences between the two cities
-4. **Compliance**: Tracks WHO guideline compliance and exceedance events
+1. **Real-Time Monitoring**: Live air quality updates every 5 seconds with intelligent alerts
+2. **Pollution Levels**: Analysis shows average pollution levels and variability in both cities
+3. **Temporal Patterns**: Identifies when pollution is highest/lowest during the day and year
+4. **Comparative Analysis**: Shows correlation and differences between the two cities
+5. **Compliance**: Tracks WHO guideline compliance and exceedance events
+6. **Rush Hour Effects**: Real-time simulation accounts for traffic patterns
 
 ## 🛠️ Technical Stack
 
@@ -141,6 +160,11 @@ air_pollution_analysis/
 
 ## 🔧 API Endpoints
 
+### Real-Time Endpoints (NEW!)
+- `GET /api/realtime/<city>` - Get current simulated pollution data for a city
+- `GET /api/realtime/stream` - Server-Sent Events stream for live updates
+
+### Statistical Endpoints
 - `GET /` - Main dashboard page
 - `GET /api/stats/<city>` - Basic statistics for a city
 - `GET /api/timeseries/<city>/<pollutant>` - Time series data

@@ -16,11 +16,50 @@
         </header>
 
         <div class="tabs">
+            <button class="tab-button" onclick="showTab('realtime')">🔴 Live Monitor</button>
             <button class="tab-button active" onclick="showTab('overview')">Overview</button>
             <button class="tab-button" onclick="showTab('timeseries')">Time Series</button>
             <button class="tab-button" onclick="showTab('patterns')">Patterns</button>
             <button class="tab-button" onclick="showTab('comparison')">City Comparison</button>
             <button class="tab-button" onclick="showTab('who-limits')">WHO Limits</button>
+        </div>
+
+        <!-- Real-Time Monitor Tab -->
+        <div id="realtime" class="tab-content">
+            <div class="card realtime-header">
+                <h2>🔴 Real-Time Air Quality Monitor</h2>
+                <div class="realtime-status">
+                    <span class="status-indicator"></span>
+                    <span id="last-update">Connecting...</span>
+                </div>
+            </div>
+            
+            <div class="grid">
+                <div class="card realtime-card" id="nyc-realtime">
+                    <h2>🗽 New York City</h2>
+                    <div class="realtime-data">
+                        <div class="loading">Connecting...</div>
+                    </div>
+                </div>
+                <div class="card realtime-card" id="bogota-realtime">
+                    <h2>🏔️ Bogota</h2>
+                    <div class="realtime-data">
+                        <div class="loading">Connecting...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" id="alerts-container">
+                <h3>⚠️ Active Alerts</h3>
+                <div id="active-alerts">
+                    <p class="no-alerts">No active alerts</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📈 Live Trends (Last 10 Updates)</h3>
+                <div id="realtime-chart"></div>
+            </div>
         </div>
 
         <!-- Overview Tab -->

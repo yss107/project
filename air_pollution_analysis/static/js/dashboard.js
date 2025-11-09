@@ -1,5 +1,10 @@
 // Air Pollution Dashboard JavaScript
 
+// Real-time monitoring state
+let realtimeData = { nyc: [], bogota: [] };
+let eventSource = null;
+let realtimeActive = false;
+
 // Tab switching
 function showTab(tabName) {
     // Hide all tabs
@@ -19,17 +24,22 @@ function showTab(tabName) {
     // Add active class to clicked button
     event.target.classList.add('active');
     
-    // Load data for the tab if not already loaded
-    if (tabName === 'overview') {
-        loadOverview();
-    } else if (tabName === 'timeseries') {
-        loadTimeSeries();
-    } else if (tabName === 'patterns') {
-        loadPatterns();
-    } else if (tabName === 'comparison') {
-        loadComparison();
-    } else if (tabName === 'who-limits') {
-        loadWHOLimits();
+    // Load data for the tab
+    if (tabName === 'realtime') {
+        startRealTimeMonitoring();
+    } else {
+        stopRealTimeMonitoring();
+        if (tabName === 'overview') {
+            loadOverview();
+        } else if (tabName === 'timeseries') {
+            loadTimeSeries();
+        } else if (tabName === 'patterns') {
+            loadPatterns();
+        } else if (tabName === 'comparison') {
+            loadComparison();
+        } else if (tabName === 'who-limits') {
+            loadWHOLimits();
+        }
     }
 }
 
@@ -463,3 +473,177 @@ function createExceedancePlot(nycWHO, bogotaWHO) {
 document.addEventListener('DOMContentLoaded', function() {
     loadOverview();
 });
+
+function startRealTimeMonitoring() {
+    if (realtimeActive) return;
+    
+    realtimeActive = true;
+    realtimeData = { nyc: [], bogota: [] };
+    
+    // Connect to SSE stream
+    eventSource = new EventSource('/api/realtime/stream');
+    
+    eventSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        updateRealTimeDisplay(data);
+    };
+    
+    eventSource.onerror = function(error) {
+        console.error('SSE Error:', error);
+        document.getElementById('last-update').textContent = 'Connection lost - Reconnecting...';
+        stopRealTimeMonitoring();
+        setTimeout(startRealTimeMonitoring, 5000);
+    };
+}
+
+function stopRealTimeMonitoring() {
+    if (eventSource) {
+        eventSource.close();
+        eventSource = null;
+    }
+    realtimeActive = false;
+}
+
+function updateRealTimeDisplay(data) {
+    // Update timestamp
+    const timestamp = new Date(data.timestamp);
+    document.getElementById('last-update').textContent = 
+        `Last update: ${timestamp.toLocaleTimeString()}`;
+    
+    // Update NYC data
+    updateCityRealTime('nyc', data.nyc);
+    
+    // Update Bogota data
+    updateCityRealTime('bogota', data.bogota);
+    
+    // Store data for chart (keep last 10 readings)
+    realtimeData.nyc.push({ time: timestamp, value: data.nyc.pm25 });
+    realtimeData.bogota.push({ time: timestamp, value: data.bogota.pm25 });
+    
+    if (realtimeData.nyc.length > 10) {
+        realtimeData.nyc.shift();
+        realtimeData.bogota.shift();
+    }
+    
+    // Update chart
+    updateRealTimeChart();
+    
+    // Check for alerts
+    updateAlerts(data.nyc, data.bogota);
+}
+
+function updateCityRealTime(city, data) {
+    const container = document.querySelector(`#${city}-realtime .realtime-data`);
+    
+    const aqiColor = data.aqi_category.color;
+    const aqiLevel = data.aqi_category.level;
+    
+    let html = `
+        <div class="pm-reading">
+            <div class="pm-label">PM2.5</div>
+            <div class="pm-value" style="color: ${aqiColor}">
+                ${data.pm25}<span class="pm-unit">μg/m³</span>
+            </div>
+            <div class="aqi-badge" style="background-color: ${aqiColor}">
+                ${aqiLevel}
+            </div>
+        </div>
+        
+        <div class="compliance-status ${data.who_compliant ? 'compliant' : 'non-compliant'}">
+            ${data.who_compliant ? '✓' : '✗'} WHO Annual Limit (5 μg/m³)
+        </div>
+    `;
+    
+    if (data.pm10 !== undefined) {
+        html += `
+            <div class="pm-secondary">
+                <strong>PM10:</strong> ${data.pm10} μg/m³
+                ${data.pm10_alert ? '⚠️ Exceeds WHO 24h limit' : ''}
+            </div>
+        `;
+    }
+    
+    container.innerHTML = html;
+}
+
+function updateRealTimeChart() {
+    if (realtimeData.nyc.length === 0) return;
+    
+    const traces = [
+        {
+            x: realtimeData.nyc.map(d => d.time),
+            y: realtimeData.nyc.map(d => d.value),
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'NYC',
+            line: { color: '#3498db', width: 2 },
+            marker: { size: 6 }
+        },
+        {
+            x: realtimeData.bogota.map(d => d.time),
+            y: realtimeData.bogota.map(d => d.value),
+            type: 'scatter',
+            mode: 'lines+markers',
+            name: 'Bogota',
+            line: { color: '#e74c3c', width: 2 },
+            marker: { size: 6 }
+        }
+    ];
+    
+    const layout = {
+        title: 'Live PM2.5 Trends',
+        xaxis: { 
+            title: 'Time',
+            type: 'date'
+        },
+        yaxis: { title: 'PM2.5 (μg/m³)' },
+        hovermode: 'closest',
+        showlegend: true,
+        height: 300,
+        margin: { t: 40, b: 40, l: 50, r: 20 }
+    };
+    
+    Plotly.newPlot('realtime-chart', traces, layout, {responsive: true});
+}
+
+function updateAlerts(nycData, bogotaData) {
+    const alertsContainer = document.getElementById('active-alerts');
+    let alerts = [];
+    
+    // WHO 24-hour limit alert
+    if (nycData.alert) {
+        alerts.push({
+            city: 'New York City',
+            message: `PM2.5 level (${nycData.pm25} μg/m³) exceeds WHO 24-hour limit (15 μg/m³)`,
+            critical: nycData.pm25 > 35
+        });
+    }
+    
+    if (bogotaData.alert) {
+        alerts.push({
+            city: 'Bogota',
+            message: `PM2.5 level (${bogotaData.pm25} μg/m³) exceeds WHO 24-hour limit (15 μg/m³)`,
+            critical: bogotaData.pm25 > 35
+        });
+    }
+    
+    if (bogotaData.pm10_alert) {
+        alerts.push({
+            city: 'Bogota',
+            message: `PM10 level (${bogotaData.pm10} μg/m³) exceeds WHO 24-hour limit (45 μg/m³)`,
+            critical: bogotaData.pm10 > 100
+        });
+    }
+    
+    if (alerts.length === 0) {
+        alertsContainer.innerHTML = '<p class="no-alerts">No active alerts</p>';
+    } else {
+        let html = alerts.map(alert => `
+            <div class="alert-item ${alert.critical ? 'critical' : ''}">
+                <strong>${alert.city}</strong>
+                ${alert.message}
+            </div>
+        `).join('');
+        alertsContainer.innerHTML = html;
+    }
+}
