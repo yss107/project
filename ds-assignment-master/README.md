@@ -1,9 +1,9 @@
-# Changes Made to Fix and Improve Pipeline
 
-## Summary
+
+# Summary
 Successfully fixed all bugs in the driver allocation model training pipeline and improved model performance from ROC AUC 0.17 to 0.75 (+342% improvement).
 
-## Files Modified
+## Files 
 
 ### 1. src/data/make_dataset.py
 - **Fixed:** `clean_participant_df()` function to remove data leakage
@@ -42,9 +42,6 @@ Successfully fixed all bugs in the driver allocation model training pipeline and
 - Recall: 0.994
 - F1 Score: 0.950
 
-### How to Run
-```bash
-make run
-```
+
 
 This will execute the full pipeline: data processing → feature engineering → model training → predictions → tests
