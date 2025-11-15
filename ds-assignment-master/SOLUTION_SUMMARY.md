@@ -71,16 +71,4 @@ These changes improved ROC AUC from 0.713 to 0.745 (+4.5%).
 
 4. **High recall is natural**: The extremely high recall (99.4%) reflects class imbalance - most driver-order pairs in the data result in acceptance, which is expected since we only have records for actual allocations.
 
-## Future Work
 
-If given more time, I would explore:
-1. Address class imbalance with SMOTE or class weights
-2. Add driver-level aggregated features (avg GPS accuracy, typical working hours)
-3. Incorporate booking-level features from booking_log (COMPLETED vs CANCELLED orders)
-4. Try gradient boosting (XGBoost/LightGBM) for potentially better performance
-5. Implement cross-validation for more robust hyperparameter tuning
-6. Add feature importance analysis to understand driver acceptance patterns
-
-## Conclusion
-
-The assignment successfully simulated real-world data science challenges: debugging data pipelines, identifying silent errors, and iteratively improving model performance through principled feature engineering and hyperparameter tuning. The final model achieves strong performance in predicting driver acceptance, which would help GoRide allocate orders more efficiently and reduce customer wait times.
