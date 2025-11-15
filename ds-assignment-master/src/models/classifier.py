@@ -33,16 +33,7 @@ class SklearnClassifier(Classifier):
         self.clf.fit(df_train[self.features].values, df_train[self.target].values)
 
     def evaluate(self, df_test: pd.DataFrame) -> Dict[str, float]:
-        """
-        Evaluate the model on test data using multiple metrics.
-        
-        For the driver allocation problem, we use:
-        - ROC AUC: measures the model's ability to rank drivers by likelihood of acceptance
-        - Precision: measures how many selected drivers actually accepted
-        - Recall: measures how many accepted drivers we successfully identified
-        - F1 Score: harmonic mean of precision and recall
-        - Accuracy: overall correctness of predictions
-        """
+    
         # Get predictions
         y_true = df_test[self.target].values
         y_pred_proba = self.predict(df_test)
