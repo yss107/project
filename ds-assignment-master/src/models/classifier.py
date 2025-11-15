@@ -4,6 +4,7 @@ from typing import Dict, List
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator
+from sklearn.metrics import roc_auc_score, precision_score, recall_score, f1_score, accuracy_score
 
 
 class Classifier(ABC):
@@ -31,11 +32,32 @@ class SklearnClassifier(Classifier):
     def train(self, df_train: pd.DataFrame):
         self.clf.fit(df_train[self.features].values, df_train[self.target].values)
 
-    def evaluate(self, df_test: pd.DataFrame):
-        raise NotImplementedError(
-            f"You're almost there! Identify an appropriate evaluation metric for your model and implement it here. "
-            f"The expected output is a dictionary of the following schema: {{metric_name: metric_score}}"
-        )
+    def evaluate(self, df_test: pd.DataFrame) -> Dict[str, float]:
+        """
+        Evaluate the model on test data using multiple metrics.
+        
+        For the driver allocation problem, we use:
+        - ROC AUC: measures the model's ability to rank drivers by likelihood of acceptance
+        - Precision: measures how many selected drivers actually accepted
+        - Recall: measures how many accepted drivers we successfully identified
+        - F1 Score: harmonic mean of precision and recall
+        - Accuracy: overall correctness of predictions
+        """
+        # Get predictions
+        y_true = df_test[self.target].values
+        y_pred_proba = self.predict(df_test)
+        y_pred = (y_pred_proba >= 0.5).astype(int)
+        
+        # Calculate metrics
+        metrics = {
+            "roc_auc": float(roc_auc_score(y_true, y_pred_proba)),
+            "accuracy": float(accuracy_score(y_true, y_pred)),
+            "precision": float(precision_score(y_true, y_pred)),
+            "recall": float(recall_score(y_true, y_pred)),
+            "f1_score": float(f1_score(y_true, y_pred))
+        }
+        
+        return metrics
 
     def predict(self, df: pd.DataFrame):
         return self.clf.predict_proba(df[self.features].values)[:, 1]

@@ -32,7 +32,23 @@ def clean_booking_df(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def clean_participant_df(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Clean participant data by removing duplicates and keeping only the final outcome.
+    
+    For each driver-order pair, we want only the final status (ACCEPTED/IGNORED/REJECTED),
+    not the intermediate CREATED status. This prevents having duplicate rows for the same
+    allocation decision.
+    """
     df = df.drop_duplicates()
+    
+    # Remove CREATED events if there's a subsequent outcome event for the same driver-order pair
+    # Keep only rows where participant_status is not CREATED, OR where it's CREATED but
+    # there's no other status for that driver-order pair
+    df = df.sort_values(['driver_id', 'order_id', 'event_timestamp'])
+    
+    # For each driver-order pair, keep the last event (final outcome)
+    df = df.groupby(['driver_id', 'order_id'], as_index=False).last()
+    
     return df
 
 

@@ -40,3 +40,10 @@ Thumbs.db
 tmp/
 temp/
 *.tmp
+
+# Data files
+ds-assignment-master/data/raw/*.csv
+ds-assignment-master/data/processed/*.csv
+ds-assignment-master/models/*.pkl
+ds-assignment-master/submission/*.csv
+ds-assignment-master/submission/*.json
