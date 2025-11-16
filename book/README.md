@@ -221,11 +221,7 @@ This repository contains a comprehensive collection of books and resources cover
 
 ---
 
-## ⚠️ Copyright Notice
 
-These materials are for educational and research purposes. Please respect copyright laws and support the authors by purchasing official copies of these books when possible.
-
----
 
 ## 🤝 Contributing
 
