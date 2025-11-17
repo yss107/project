@@ -147,10 +147,34 @@ detector = EmotionDetector(model_path='emotion_model_best.h5')
 Face_Emotion_Detection_Realtime/
 ├── emotion_detector.py          # Core detection module with OpenCV interface
 ├── emotion_detector_gui.py      # GUI application with tkinter
+├── web_app.py                   # Web interface with Flask and WebSocket
+├── templates/
+│   └── index.html              # Modern web UI with real-time charts
 ├── train_model.py               # Model training script
 ├── requirements.txt             # Python dependencies
+├── start_web.sh                 # Quick start script for web interface
+├── WEB_INTERFACE_GUIDE.md      # Comprehensive web interface documentation
 └── README.md                    # This file
 ```
+
+## Web Interface
+
+The new web interface offers a modern, browser-based experience with real-time visualizations. For detailed information, see [WEB_INTERFACE_GUIDE.md](WEB_INTERFACE_GUIDE.md).
+
+**Quick Start:**
+```bash
+python web_app.py
+# Then open http://localhost:5000 in your browser
+```
+
+**Features:**
+- 🎨 Modern gradient design with animations
+- 📊 Real-time charts (timeline and distribution)
+- 🔄 WebSocket-powered instant updates
+- 🎭 Emoji indicators for emotions
+- 📈 Live statistics and confidence meters
+- 🌐 Multi-user support
+- 📱 Responsive mobile-friendly design
 
 ## Model Architecture
 
