@@ -47,3 +47,7 @@ ds-assignment-master/data/processed/*.csv
 ds-assignment-master/models/*.pkl
 ds-assignment-master/submission/*.csv
 ds-assignment-master/submission/*.json
+
+# LaReQA project generated files
+LaReQA_Multilingual_QA_System/*.json
+LaReQA_Multilingual_QA_System/__pycache__/
