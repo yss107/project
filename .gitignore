@@ -51,3 +51,13 @@ ds-assignment-master/submission/*.json
 # LaReQA project generated files
 LaReQA_Multilingual_QA_System/*.json
 LaReQA_Multilingual_QA_System/__pycache__/
+
+# Face Emotion Detection project files
+Face_Emotion_Detection_Realtime/*.h5
+Face_Emotion_Detection_Realtime/*.png
+Face_Emotion_Detection_Realtime/*.jpg
+Face_Emotion_Detection_Realtime/*.jpeg
+Face_Emotion_Detection_Realtime/emotion_screenshot_*.png
+Face_Emotion_Detection_Realtime/training_history.png
+Face_Emotion_Detection_Realtime/confusion_matrix.png
+Face_Emotion_Detection_Realtime/*.csv
