@@ -17,6 +17,7 @@ This project implements an innovative **Multilingual Question Answering System**
 - ✅ Support for multiple languages (English, Spanish, French, German, Hindi, Chinese, Arabic, Japanese)
 - ✅ Cross-lingual question answering
 - ✅ Similarity-based answer ranking
+- ✅ **Interactive web interface**
 - ✅ Interactive command-line interface
 - ✅ Knowledge base management (add, save, load)
 - ✅ Statistical analysis of the knowledge base
@@ -54,7 +55,27 @@ pip install -r requirements.txt
 
 ### Basic Usage
 
-#### Run the Demonstration
+#### Option 1: Web Interface (Recommended)
+
+The easiest way to use the system is through the web interface:
+
+```bash
+python web_interface.py
+```
+
+Then open your browser and navigate to:
+```
+http://localhost:5000
+```
+
+The web interface provides:
+- 🔍 Question search with real-time results
+- ➕ Add new Q&A pairs to the knowledge base
+- 📊 Live statistics dashboard
+- 🎨 Modern, responsive design
+- 🌐 Support for all 8+ languages
+
+#### Option 2: Command-Line Demonstration
 
 ```python
 python multilingual_qa_system.py
@@ -67,7 +88,7 @@ This will:
 - Show how to add new knowledge
 - Save the knowledge base to a JSON file
 
-#### Interactive Mode
+#### Option 3: Interactive Mode
 
 To use the system interactively, uncomment the last line in `multilingual_qa_system.py`:
 
