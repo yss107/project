@@ -6,13 +6,16 @@ A real-time face emotion detection system that uses your device camera to analyz
 
 - **Real-time emotion detection** from webcam feed
 - **7 emotion categories**: Angry, Disgust, Fear, Happy, Neutral, Sad, Surprise
-- **Two interfaces**:
+- **Three interfaces**:
   - Simple OpenCV-based interface
   - Advanced GUI with statistics and controls
+  - **NEW! Modern web interface with live visualization**
 - **Deep learning model** using CNN architecture
 - **Visual feedback** with emotion labels, confidence scores, and probability bars
 - **Statistics tracking** to monitor emotion distribution
 - **Screenshot capability** to save moments
+- **Real-time WebSocket updates** for instant emotion data
+- **Interactive charts and graphs** for emotion analysis
 
 ## Demo
 
@@ -44,19 +47,36 @@ pip install -r requirements.txt
 
 ## Usage
 
-### Quick Start - Simple Interface
+### Web Interface (✨ Recommended - New!)
 
-Run the basic emotion detector with OpenCV interface:
+Run the modern web-based interface with awesome visualizations:
 
 ```bash
-python emotion_detector.py
+python web_app.py
 ```
 
-**Controls:**
-- Press `q` to quit
-- Press `s` to save a screenshot
+Then open your browser and navigate to: **http://localhost:5000**
 
-### GUI Interface (Recommended)
+**Features:**
+- 🎨 Modern, responsive design with gradient animations
+- 📊 Real-time emotion charts and graphs
+- 📈 Live emotion timeline visualization
+- 🔄 WebSocket-powered instant updates
+- 💯 Confidence meter with visual feedback
+- 📷 Live camera feed with emotion overlay
+- 🎭 Emoji indicators for each emotion
+- 📉 Distribution pie chart
+- 🔢 Comprehensive statistics tracking
+- 🎯 Interactive controls (Start/Stop/Reset)
+- 🌈 Unique color scheme for each emotion
+
+**Perfect for:**
+- Presentations and demos
+- Remote monitoring
+- Multiple viewers simultaneously
+- Embedding in other applications
+
+### GUI Interface
 
 Run the advanced GUI version with better controls and statistics:
 
@@ -70,6 +90,18 @@ python emotion_detector_gui.py
 - Save screenshots
 - Reset statistics
 - Visual emotion probability display
+
+### Quick Start - Simple Interface
+
+Run the basic emotion detector with OpenCV interface:
+
+```bash
+python emotion_detector.py
+```
+
+**Controls:**
+- Press `q` to quit
+- Press `s` to save a screenshot
 
 ## Training Your Own Model
 
@@ -115,10 +147,34 @@ detector = EmotionDetector(model_path='emotion_model_best.h5')
 Face_Emotion_Detection_Realtime/
 ├── emotion_detector.py          # Core detection module with OpenCV interface
 ├── emotion_detector_gui.py      # GUI application with tkinter
+├── web_app.py                   # Web interface with Flask and WebSocket
+├── templates/
+│   └── index.html              # Modern web UI with real-time charts
 ├── train_model.py               # Model training script
 ├── requirements.txt             # Python dependencies
+├── start_web.sh                 # Quick start script for web interface
+├── WEB_INTERFACE_GUIDE.md      # Comprehensive web interface documentation
 └── README.md                    # This file
 ```
+
+## Web Interface
+
+The new web interface offers a modern, browser-based experience with real-time visualizations. For detailed information, see [WEB_INTERFACE_GUIDE.md](WEB_INTERFACE_GUIDE.md).
+
+**Quick Start:**
+```bash
+python web_app.py
+# Then open http://localhost:5000 in your browser
+```
+
+**Features:**
+- 🎨 Modern gradient design with animations
+- 📊 Real-time charts (timeline and distribution)
+- 🔄 WebSocket-powered instant updates
+- 🎭 Emoji indicators for emotions
+- 📈 Live statistics and confidence meters
+- 🌐 Multi-user support
+- 📱 Responsive mobile-friendly design
 
 ## Model Architecture
 
