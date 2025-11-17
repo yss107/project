@@ -122,7 +122,11 @@ if __name__ == '__main__':
     print("="*80)
     print("\n🌐 Starting web server...")
     print("📍 Access the interface at: http://localhost:5000")
-    print("⚡ Press Ctrl+C to stop the server\n")
+    print("⚡ Press Ctrl+C to stop the server")
+    print("\n⚠️  Note: For production deployment, use a WSGI server like Gunicorn")
     print("="*80 + "\n")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    # Use debug mode only for development
+    # Set debug=False for production deployment
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    app.run(debug=debug_mode, host='0.0.0.0', port=5000)
