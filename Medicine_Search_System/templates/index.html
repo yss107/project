@@ -6,7 +6,7 @@
 <div class="hero">
     <div class="container">
         <h2>Welcome to Medicine Search System</h2>
-        <p class="hero-subtitle">Search and discover comprehensive information about medicines</p>
+        <p class="hero-subtitle">Your comprehensive healthcare companion with advanced features</p>
         
         <div class="search-box">
             <form action="{{ url_for('search') }}" method="get" class="search-form">
@@ -28,37 +28,220 @@
                 <p>Search medicines by name, composition, or therapeutic use</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">💊</div>
-                <h3>Detailed Info</h3>
-                <p>View complete information including uses and side effects</p>
+                <div class="feature-icon">📄</div>
+                <h3>OCR Prescription</h3>
+                <p>Upload prescription images and extract medicine names automatically</p>
             </div>
             <div class="feature-card">
-                <div class="feature-icon">🔄</div>
-                <h3>Alternatives</h3>
-                <p>Find alternative medicines with similar composition</p>
+                <div class="feature-icon">🏥</div>
+                <h3>Find Pharmacies</h3>
+                <p>Locate nearby pharmacies with ratings and contact info</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Price Compare</h3>
+                <p>Compare medicine prices across different pharmacies</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3>Multi-Language</h3>
+                <p>Access the system in English, Spanish, French, German, and Hindi</p>
             </div>
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
-                <h3>Statistics</h3>
-                <p>Explore comprehensive database statistics</p>
+                <h3>Analytics</h3>
+                <p>Advanced analytics dashboard with insights and statistics</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile API</h3>
+                <p>Complete API for building native mobile applications</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔬</div>
+                <h3>Interactions</h3>
+                <p>Check for potential drug interactions between medicines</p>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container">
+    <section class="new-features-section">
+        <h2>✨ New Advanced Features</h2>
+        <div class="new-features-grid">
+            <div class="new-feature">
+                <h3>🔬 OCR Integration</h3>
+                <p>Our prescription upload now uses Tesseract OCR to automatically extract medicine names from images. Just upload a photo of your prescription!</p>
+                <a href="{{ url_for('prescription_upload') }}" class="feature-btn">Try OCR Upload</a>
+            </div>
+            <div class="new-feature">
+                <h3>🏥 Pharmacy Locator</h3>
+                <p>Find nearby pharmacies with one click. Get addresses, phone numbers, ratings, and hours of operation.</p>
+                <a href="{{ url_for('pharmacy_locator') }}" class="feature-btn">Find Pharmacies</a>
+            </div>
+            <div class="new-feature">
+                <h3>💰 Price Comparison</h3>
+                <p>Compare medicine prices across different pharmacies and save money. See delivery options and availability.</p>
+                <a href="{{ url_for('price_comparison') }}" class="feature-btn">Compare Prices</a>
+            </div>
+            <div class="new-feature">
+                <h3>🌐 Multi-Language Support</h3>
+                <p>Access the platform in multiple languages including English, Spanish, French, German, and Hindi.</p>
+                <button onclick="showLanguageSelector()" class="feature-btn">Change Language</button>
+            </div>
+            <div class="new-feature">
+                <h3>📊 Advanced Analytics</h3>
+                <p>Get insights into your medicine searches, comparisons, and prescriptions with beautiful visualizations.</p>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('analytics_dashboard') }}" class="feature-btn">View Analytics</a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}" class="feature-btn">Login to Access</a>
+                {% endif %}
+            </div>
+            <div class="new-feature">
+                <h3>📱 Native Mobile Apps</h3>
+                <p>Build native iOS and Android apps using our comprehensive RESTful API with JWT authentication.</p>
+                <a href="{{ url_for('mobile_api_docs') }}" class="feature-btn">API Documentation</a>
+            </div>
+        </div>
+    </section>
+
     <section class="info-section">
         <h2>About This System</h2>
         <p>
             This Medicine Search System is built using the 1mg medicine dataset, providing 
             comprehensive information about various medicines including their composition, 
-            uses, side effects, and manufacturers. Use the search feature above to find 
-            information about specific medicines or browse by manufacturer.
+            uses, side effects, and manufacturers. Our platform now includes advanced features
+            like OCR prescription scanning, pharmacy locator, price comparison, multi-language 
+            support, and a complete API for mobile applications.
         </p>
+        <div class="stats-banner">
+            <div class="stat-item">
+                <div class="stat-number">30+</div>
+                <div class="stat-label">Medicines</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Advanced Features</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">5</div>
+                <div class="stat-label">Languages</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Secure</div>
+            </div>
+        </div>
         <div class="warning-box">
             <strong>⚠️ Disclaimer:</strong> This information is for educational purposes only. 
             Always consult with a qualified healthcare professional before taking any medication.
         </div>
     </section>
 </div>
+
+<style>
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 40px;
+}
+
+.new-features-section {
+    margin: 40px 0;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 10px;
+}
+
+.new-features-section h2 {
+    text-align: center;
+    color: #667eea;
+    margin-bottom: 30px;
+}
+
+.new-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.new-feature {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.new-feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.new-feature h3 {
+    color: #667eea;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.new-feature p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.feature-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.feature-btn:hover {
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+}
+
+.stats-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+    padding: 30px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+}
+
+.stat-item {
+    text-align: center;
+    color: white;
+}
+
+.stat-number {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+</style>
+
+<script>
+function showLanguageSelector() {
+    document.getElementById('language-select').focus();
+    alert('Use the language selector in the top navigation to change the language.');
+}
+</script>
 {% endblock %}

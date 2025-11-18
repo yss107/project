@@ -13,21 +13,43 @@
                 <h1>💊 Medicine Search System</h1>
             </div>
             <ul class="nav-menu">
-                <li><a href="{{ url_for('index') }}">Home</a></li>
-                <li><a href="{{ url_for('search') }}">Search</a></li>
-                <li><a href="{{ url_for('compare') }}">Compare</a></li>
-                <li><a href="{{ url_for('interactions') }}">Interactions</a></li>
-                <li><a href="{{ url_for('prescription_upload') }}">Upload Prescription</a></li>
-                <li><a href="{{ url_for('stats') }}">Statistics</a></li>
+                <li><a href="{{ url_for('index') }}">🏠 Home</a></li>
+                <li><a href="{{ url_for('search') }}">🔍 Search</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">✨ Features ▾</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('compare') }}">⚖️ Compare</a>
+                        <a href="{{ url_for('interactions') }}">🔬 Interactions</a>
+                        <a href="{{ url_for('prescription_upload') }}">📄 Upload Prescription</a>
+                        <a href="{{ url_for('price_comparison') }}">💰 Price Comparison</a>
+                        <a href="{{ url_for('pharmacy_locator') }}">🏥 Find Pharmacies</a>
+                    </div>
+                </li>
+                <li><a href="{{ url_for('stats') }}">📊 Statistics</a></li>
                 {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('saved_searches') }}">Saved Searches</a></li>
-                    <li><a href="{{ url_for('comparisons') }}">My Comparisons</a></li>
-                    <li><a href="{{ url_for('auth.profile') }}">Profile</a></li>
-                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                    <li><a href="{{ url_for('analytics_dashboard') }}">📈 Analytics</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">👤 {{ current_user.username }} ▾</a>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('saved_searches') }}">💾 Saved Searches</a>
+                            <a href="{{ url_for('comparisons') }}">📋 My Comparisons</a>
+                            <a href="{{ url_for('auth.profile') }}">👤 Profile</a>
+                            <a href="{{ url_for('auth.logout') }}">🚪 Logout</a>
+                        </div>
+                    </li>
                 {% else %}
-                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                    <li><a href="{{ url_for('auth.login') }}">🔐 Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">📝 Register</a></li>
                 {% endif %}
+                <li class="language-selector">
+                    <select id="language-select" onchange="changeLanguage(this.value)">
+                        <option value="en" selected>🌐 English</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                        <option value="hi">🇮🇳 हिन्दी</option>
+                    </select>
+                </li>
             </ul>
         </div>
     </nav>
@@ -50,7 +72,81 @@
         <div class="container">
             <p>&copy; 2025 Medicine Search System. Data from 1mg Medicine Dataset.</p>
             <p>For educational purposes only. Always consult a healthcare professional.</p>
+            <p style="margin-top: 10px;">
+                <a href="https://github.com" style="color: white; margin: 0 10px;">GitHub</a> |
+                <a href="/api/v1" style="color: white; margin: 0 10px;">API Documentation</a> |
+                <a href="mailto:support@example.com" style="color: white; margin: 0 10px;">Contact</a>
+            </p>
         </div>
     </footer>
+
+    <script>
+    function changeLanguage(lang) {
+        const url = new URL(window.location);
+        url.searchParams.set('lang', lang);
+        window.location.href = url.toString();
+    }
+
+    // Set the current language from URL parameter
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const lang = urlParams.get('lang');
+        if (lang) {
+            document.getElementById('language-select').value = lang;
+        }
+    });
+    </script>
+    
+    <style>
+    /* Dropdown menu styles */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 200px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        border-radius: 5px;
+        margin-top: 5px;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropbtn {
+        cursor: pointer;
+    }
+
+    .language-selector select {
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        background: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .language-selector {
+        display: flex;
+        align-items: center;
+    }
+    </style>
 </body>
 </html>

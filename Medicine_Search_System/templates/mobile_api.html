@@ -1,0 +1,482 @@
+{% extends "base.html" %}
+
+{% block title %}Mobile API Documentation - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>📱 Mobile Application API</h1>
+    <p class="subtitle">Complete API documentation for building native mobile applications</p>
+
+    <div class="api-docs">
+        <section class="doc-section">
+            <h2>🚀 Getting Started</h2>
+            <p>This RESTful API provides all the functionality needed to build native mobile applications (iOS, Android, React Native, Flutter, etc.) for the Medicine Search System.</p>
+            
+            <div class="info-box">
+                <h3>Base URL</h3>
+                <code>https://your-domain.com/api/v1</code>
+            </div>
+
+            <div class="info-box">
+                <h3>Authentication</h3>
+                <p>The API uses JWT (JSON Web Tokens) for authentication. Include the token in the Authorization header:</p>
+                <code>Authorization: Bearer YOUR_JWT_TOKEN</code>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>🔐 Authentication Endpoints</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/auth/register</span>
+                </div>
+                <p>Register a new user account</p>
+                <div class="code-block">
+                    <pre>{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "securepassword123"
+}</pre>
+                </div>
+                <p><strong>Response:</strong></p>
+                <div class="code-block">
+                    <pre>{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "username": "johndoe",
+    "email": "john@example.com"
+  }
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/auth/login</span>
+                </div>
+                <p>Login to an existing account</p>
+                <div class="code-block">
+                    <pre>{
+  "username": "johndoe",
+  "password": "securepassword123"
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>💊 Medicine Endpoints</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/medicines/search?q=paracetamol</span>
+                </div>
+                <p>Search for medicines by name, composition, or therapeutic use</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li><code>q</code> - Search query (required)</li>
+                    <li><code>manufacturer</code> - Filter by manufacturer (optional)</li>
+                    <li><code>discontinued</code> - Filter by status: all, active, discontinued (optional)</li>
+                </ul>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/medicines/{index}</span>
+                </div>
+                <p>Get detailed information about a specific medicine</p>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>🏥 Pharmacy Endpoints</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/pharmacies/nearby</span>
+                </div>
+                <p>Find nearby pharmacies based on location</p>
+                <p><strong>Query Parameters:</strong></p>
+                <ul>
+                    <li><code>lat</code> - Latitude (required)</li>
+                    <li><code>lon</code> - Longitude (required)</li>
+                    <li><code>radius</code> - Search radius in km (default: 5)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>💰 Price Comparison Endpoints</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/prices/compare?medicine={index}</span>
+                </div>
+                <p>Compare prices for a medicine across different pharmacies</p>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>🔬 Advanced Features</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/interactions/check</span>
+                </div>
+                <p>Check for drug interactions between medicines</p>
+                <div class="code-block">
+                    <pre>{
+  "medicine_indices": [0, 1, 2]
+}</pre>
+                </div>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method post">POST</span>
+                    <span class="path">/saved-searches</span>
+                    <span class="auth-required">🔒 Auth Required</span>
+                </div>
+                <p>Save a search for later access</p>
+            </div>
+
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/saved-searches</span>
+                    <span class="auth-required">🔒 Auth Required</span>
+                </div>
+                <p>Get all saved searches for the authenticated user</p>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>📊 Statistics Endpoint</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-header">
+                    <span class="method get">GET</span>
+                    <span class="path">/stats</span>
+                </div>
+                <p>Get database statistics and insights</p>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>💻 Sample Code</h2>
+            
+            <h3>React Native Example</h3>
+            <div class="code-block">
+                <pre>// Search medicines
+const searchMedicines = async (query) => {
+  try {
+    const response = await fetch(
+      `https://api.example.com/api/v1/medicines/search?q=${query}`
+    );
+    const data = await response.json();
+    return data.medicines;
+  } catch (error) {
+    console.error('Error searching medicines:', error);
+  }
+};
+
+// Login
+const login = async (username, password) => {
+  try {
+    const response = await fetch(
+      'https://api.example.com/api/v1/auth/login',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      }
+    );
+    const data = await response.json();
+    // Store token in AsyncStorage
+    await AsyncStorage.setItem('token', data.token);
+    return data;
+  } catch (error) {
+    console.error('Login error:', error);
+  }
+};</pre>
+            </div>
+
+            <h3>Flutter/Dart Example</h3>
+            <div class="code-block">
+                <pre>import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+// Search medicines
+Future<List<Medicine>> searchMedicines(String query) async {
+  final response = await http.get(
+    Uri.parse('https://api.example.com/api/v1/medicines/search?q=$query'),
+  );
+  
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return (data['medicines'] as List)
+        .map((json) => Medicine.fromJson(json))
+        .toList();
+  } else {
+    throw Exception('Failed to load medicines');
+  }
+}
+
+// Login
+Future<AuthResponse> login(String username, String password) async {
+  final response = await http.post(
+    Uri.parse('https://api.example.com/api/v1/auth/login'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'username': username,
+      'password': password,
+    }),
+  );
+  
+  if (response.statusCode == 200) {
+    return AuthResponse.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Login failed');
+  }
+}</pre>
+            </div>
+
+            <h3>Swift/iOS Example</h3>
+            <div class="code-block">
+                <pre>import Foundation
+
+// Search medicines
+func searchMedicines(query: String, completion: @escaping ([Medicine]?) -> Void) {
+    let urlString = "https://api.example.com/api/v1/medicines/search?q=\(query)"
+    guard let url = URL(string: urlString) else { return }
+    
+    URLSession.shared.dataTask(with: url) { data, response, error in
+        guard let data = data, error == nil else {
+            completion(nil)
+            return
+        }
+        
+        do {
+            let result = try JSONDecoder().decode(SearchResponse.self, from: data)
+            completion(result.medicines)
+        } catch {
+            completion(nil)
+        }
+    }.resume()
+}
+
+// Login
+func login(username: String, password: String, completion: @escaping (AuthResponse?) -> Void) {
+    let url = URL(string: "https://api.example.com/api/v1/auth/login")!
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    
+    let body: [String: String] = ["username": username, "password": password]
+    request.httpBody = try? JSONEncoder().encode(body)
+    
+    URLSession.shared.dataTask(with: request) { data, response, error in
+        guard let data = data, error == nil else {
+            completion(nil)
+            return
+        }
+        
+        let authResponse = try? JSONDecoder().decode(AuthResponse.self, from: data)
+        completion(authResponse)
+    }.resume()
+}</pre>
+            </div>
+        </section>
+
+        <section class="doc-section">
+            <h2>📝 Best Practices</h2>
+            <ul class="best-practices">
+                <li>Always store JWT tokens securely (Keychain on iOS, KeyStore on Android)</li>
+                <li>Implement token refresh mechanism for long-lived sessions</li>
+                <li>Handle network errors gracefully with retry logic</li>
+                <li>Cache responses when appropriate to improve performance</li>
+                <li>Use HTTPS for all API requests in production</li>
+                <li>Implement proper error handling for all API calls</li>
+                <li>Add request timeouts to prevent hanging requests</li>
+                <li>Follow platform-specific UI/UX guidelines</li>
+            </ul>
+        </section>
+
+        <section class="doc-section">
+            <h2>🔗 Additional Resources</h2>
+            <div class="resources">
+                <a href="/api/v1" class="resource-link">Interactive API Explorer</a>
+                <a href="https://github.com" class="resource-link">GitHub Repository</a>
+                <a href="mailto:api@example.com" class="resource-link">API Support</a>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+.api-docs {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.doc-section {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    margin: 20px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.doc-section h2 {
+    color: #667eea;
+    margin-top: 0;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+.info-box {
+    background: #f8f9fa;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+.info-box h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.endpoint {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #fafafa;
+}
+
+.endpoint-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.method {
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.85em;
+    text-transform: uppercase;
+}
+
+.method.get {
+    background: #28a745;
+    color: white;
+}
+
+.method.post {
+    background: #007bff;
+    color: white;
+}
+
+.method.put {
+    background: #ffc107;
+    color: black;
+}
+
+.method.delete {
+    background: #dc3545;
+    color: white;
+}
+
+.path {
+    font-family: monospace;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.auth-required {
+    background: #ff9800;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
+
+.code-block {
+    background: #282c34;
+    color: #abb2bf;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 15px 0;
+    overflow-x: auto;
+}
+
+.code-block pre {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.best-practices {
+    list-style: none;
+    padding: 0;
+}
+
+.best-practices li {
+    padding: 10px;
+    margin: 5px 0;
+    background: #f8f9fa;
+    border-left: 3px solid #667eea;
+    border-radius: 3px;
+}
+
+.best-practices li::before {
+    content: "✓ ";
+    color: #28a745;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.resources {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.resource-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: transform 0.3s;
+}
+
+.resource-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+</style>
+{% endblock %}
