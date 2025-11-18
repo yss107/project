@@ -53,13 +53,33 @@ A comprehensive web application for searching and managing medicine information 
 ![User Registration](screenshots/06-user-registration.png)
 *User account registration page*
 
-### Prescription Upload
+### Prescription Upload with OCR
 ![Prescription Upload](screenshots/07-prescription-upload.png)
-*Prescription upload interface for medicine identification*
+*Prescription upload interface with OCR text extraction using Tesseract*
 
 ### Statistics Dashboard
 ![Statistics](screenshots/08-statistics.png)
 *Database statistics and top manufacturers*
+
+### Pharmacy Locator
+![Pharmacy Locator](screenshots/09-pharmacy-locator.png)
+*Find nearby pharmacies with geolocation support*
+
+### Price Comparison
+![Price Comparison](screenshots/10-price-comparison.png)
+*Compare medicine prices across different pharmacies*
+
+### Mobile API Documentation
+![Mobile API Docs](screenshots/11-mobile-api-docs.png)
+*Comprehensive API documentation for building native mobile apps*
+
+### Analytics Dashboard (Login Required)
+![Analytics Login](screenshots/12-analytics-login-required.png)
+*Advanced analytics dashboard with authentication*
+
+### Multi-Language Support
+![Multi-Language](screenshots/13-multi-language-support.png)
+*Access the platform in 5 different languages*
 
 ## Technology Stack
 
