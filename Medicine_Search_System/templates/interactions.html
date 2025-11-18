@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Drug Interaction Checker - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Drug Interaction Checker</h2>
+    
+    {% if not medicines %}
+        <div class="interaction-intro">
+            <p>Check for potential interactions between multiple medicines.</p>
+            <p>To check interactions, select medicines from the search results or comparison page.</p>
+            <a href="{{ url_for('search') }}" class="btn btn-primary">Go to Search</a>
+        </div>
+    {% else %}
+        <div class="checked-medicines">
+            <h3>Medicines Being Checked</h3>
+            <div class="medicine-chips">
+                {% for med in medicines %}
+                    <div class="medicine-chip">
+                        <strong>{{ med.data.name }}</strong>
+                        <span>{{ med.data.composition }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="interactions-results">
+            <h3>Interaction Analysis</h3>
+            
+            {% for interaction in interactions %}
+                <div class="interaction-card severity-{{ interaction.severity }}">
+                    <div class="interaction-header">
+                        {% if interaction.type == 'no_interactions' %}
+                            <span class="interaction-icon">✓</span>
+                            <h4>No Known Interactions</h4>
+                        {% elif interaction.type == 'duplicate_ingredient' %}
+                            <span class="interaction-icon">⚠️</span>
+                            <h4>Duplicate Active Ingredients</h4>
+                        {% else %}
+                            <span class="interaction-icon">⚠️</span>
+                            <h4>Potential Interaction</h4>
+                        {% endif %}
+                    </div>
+                    
+                    {% if interaction.medicine1 and interaction.medicine2 %}
+                        <div class="interaction-medicines">
+                            <span class="medicine-badge">{{ interaction.medicine1 }}</span>
+                            <span class="interaction-symbol">⟷</span>
+                            <span class="medicine-badge">{{ interaction.medicine2 }}</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="interaction-details">
+                        <p class="warning-text">{{ interaction.warning or interaction.message }}</p>
+                        
+                        {% if interaction.ingredients %}
+                            <p class="common-ingredients">
+                                <strong>Common ingredients:</strong> {{ ', '.join(interaction.ingredients) }}
+                            </p>
+                        {% endif %}
+                        
+                        <div class="severity-badge severity-{{ interaction.severity }}">
+                            Severity: {{ interaction.severity|upper }}
+                        </div>
+                        
+                        <p class="recommendation">
+                            <strong>Recommendation:</strong> {{ interaction.recommendation }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="warning-box">
+            <strong>⚠️ Important Disclaimer:</strong> 
+            This interaction checker provides basic information only. Always consult with a qualified 
+            healthcare professional or pharmacist before taking multiple medications together. 
+            This tool does not replace professional medical advice.
+        </div>
+        
+        <div class="interaction-actions">
+            <a href="{{ url_for('compare', indices=','.join(indices|map('string'))) }}" class="btn btn-secondary">Compare These Medicines</a>
+            <a href="{{ url_for('search') }}" class="btn btn-secondary">Back to Search</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

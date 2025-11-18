@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Compare Medicines - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Medicine Comparison</h2>
+    
+    {% if not medicines %}
+        <div class="comparison-intro">
+            <p>Compare multiple medicines side by side to see their differences in composition, uses, and side effects.</p>
+            <p>To compare medicines, select them from the search results page.</p>
+            <a href="{{ url_for('search') }}" class="btn btn-primary">Go to Search</a>
+        </div>
+    {% else %}
+        {% if current_user.is_authenticated %}
+            <form method="POST" action="{{ url_for('save_comparison') }}" class="save-comparison-form">
+                <input type="hidden" name="indices" value="{{ ','.join(indices|map('string')) }}">
+                <input type="text" name="title" placeholder="Comparison title (optional)" class="comparison-title-input">
+                <button type="submit" class="btn btn-secondary">Save This Comparison</button>
+            </form>
+        {% endif %}
+        
+        <div class="comparison-grid">
+            {% for medicine in medicines %}
+                <div class="comparison-card">
+                    <h3>{{ medicine.name }}</h3>
+                    
+                    <div class="comparison-section">
+                        <h4>Manufacturer</h4>
+                        <p>{{ medicine.manufacturer }}</p>
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <h4>Composition</h4>
+                        <p>{{ medicine.composition }}</p>
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <h4>Pack Size</h4>
+                        <p>{{ medicine.pack_size_label }}</p>
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <h4>Uses</h4>
+                        <p class="scrollable-text">{{ medicine.uses }}</p>
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <h4>Side Effects</h4>
+                        <div class="side-effects-list">
+                            {% set effects = medicine.side_effects.split(',') %}
+                            {% for effect in effects %}
+                                <span class="side-effect-tag">{{ effect.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="comparison-section">
+                        <h4>Status</h4>
+                        {% if medicine.is_discontinued == 'Yes' %}
+                            <span class="badge badge-discontinued">Discontinued</span>
+                        {% else %}
+                            <span class="badge badge-active">Active</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="comparison-actions">
+            <a href="{{ url_for('interactions', indices=','.join(indices|map('string'))) }}" class="btn btn-primary">Check Interactions</a>
+            <a href="{{ url_for('search') }}" class="btn btn-secondary">Back to Search</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

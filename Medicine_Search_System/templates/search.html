@@ -51,14 +51,33 @@
         {% if query or request.args.get('manufacturer') %}
             <div class="results-info">
                 <p>Found <strong>{{ medicines|length }}</strong> medicine(s)</p>
+                {% if current_user.is_authenticated %}
+                    <form method="POST" action="{{ url_for('save_search') }}" style="display: inline;">
+                        <input type="hidden" name="query" value="{{ query }}">
+                        <input type="hidden" name="manufacturer" value="{{ request.args.get('manufacturer', '') }}">
+                        <input type="hidden" name="discontinued" value="{{ request.args.get('discontinued', 'all') }}">
+                        <button type="submit" class="btn btn-secondary">💾 Save This Search</button>
+                    </form>
+                {% endif %}
             </div>
 
             {% if medicines %}
+                <div class="selection-tools">
+                    <p>Select medicines to compare or check interactions:</p>
+                    <form id="compare-form">
+                        <button type="button" onclick="compareSelected()" class="btn btn-primary">Compare Selected</button>
+                        <button type="button" onclick="checkInteractions()" class="btn btn-secondary">Check Interactions</button>
+                    </form>
+                </div>
+                
                 <div class="medicines-grid">
                     {% for medicine in medicines %}
                     <div class="medicine-card">
+                        <div class="medicine-checkbox">
+                            <input type="checkbox" id="med-{{ loop.index0 }}" value="{{ loop.index0 }}" class="medicine-select">
+                        </div>
                         <div class="medicine-header">
-                            <h3>{{ medicine.name }}</h3>
+                            <h3><label for="med-{{ loop.index0 }}">{{ medicine.name }}</label></h3>
                             {% if medicine.is_discontinued == 'Yes' %}
                                 <span class="badge badge-discontinued">Discontinued</span>
                             {% else %}
@@ -75,6 +94,26 @@
                     </div>
                     {% endfor %}
                 </div>
+                
+                <script>
+                function compareSelected() {
+                    const selected = Array.from(document.querySelectorAll('.medicine-select:checked')).map(cb => cb.value);
+                    if (selected.length < 2) {
+                        alert('Please select at least 2 medicines to compare');
+                        return;
+                    }
+                    window.location.href = '{{ url_for("compare") }}?indices=' + selected.join(',');
+                }
+                
+                function checkInteractions() {
+                    const selected = Array.from(document.querySelectorAll('.medicine-select:checked')).map(cb => cb.value);
+                    if (selected.length < 2) {
+                        alert('Please select at least 2 medicines to check interactions');
+                        return;
+                    }
+                    window.location.href = '{{ url_for("interactions") }}?indices=' + selected.join(',');
+                }
+                </script>
             {% else %}
                 <div class="no-results">
                     <p>No medicines found matching your search criteria.</p>

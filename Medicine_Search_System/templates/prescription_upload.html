@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Prescription - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Upload and Analyze Prescription</h2>
+    
+    <div class="prescription-upload-container">
+        <div class="upload-info">
+            <p>Upload an image or PDF of your prescription, and we'll help you identify the medicines.</p>
+            <ul class="info-list">
+                <li>Supported formats: PNG, JPG, JPEG, PDF</li>
+                <li>Maximum file size: 16MB</li>
+                <li>Ensure the prescription is clear and readable</li>
+            </ul>
+        </div>
+        
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            <div class="form-group">
+                <label for="prescription" class="file-label">
+                    <span class="file-icon">📄</span>
+                    <span class="file-text">Choose File</span>
+                </label>
+                <input type="file" id="prescription" name="prescription" accept=".png,.jpg,.jpeg,.pdf" required>
+                <span id="file-name" class="file-name"></span>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-full">Upload and Analyze</button>
+        </form>
+        
+        <div class="warning-box">
+            <strong>⚠️ Privacy Notice:</strong> 
+            Your prescription data is processed securely. We recommend removing any personal 
+            information that is not necessary for medicine identification before uploading.
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('prescription').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || 'No file chosen';
+    document.getElementById('file-name').textContent = fileName;
+});
+</script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="profile-container">
+        <h2>User Profile</h2>
+        
+        <div class="profile-info">
+            <div class="info-row">
+                <span class="info-label">Username:</span>
+                <span class="info-value">{{ user.username }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ user.email }}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Member Since:</span>
+                <span class="info-value">{{ user.created_at.strftime('%B %d, %Y') }}</span>
+            </div>
+        </div>
+        
+        <div class="profile-stats">
+            <h3>Your Activity</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">{{ user.saved_searches|length }}</div>
+                    <div class="stat-label">Saved Searches</div>
+                    <a href="{{ url_for('saved_searches') }}" class="btn btn-secondary">View</a>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">{{ user.comparisons|length }}</div>
+                    <div class="stat-label">Saved Comparisons</div>
+                    <a href="{{ url_for('comparisons') }}" class="btn btn-secondary">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,10 +15,32 @@
             <ul class="nav-menu">
                 <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('search') }}">Search</a></li>
+                <li><a href="{{ url_for('compare') }}">Compare</a></li>
+                <li><a href="{{ url_for('interactions') }}">Interactions</a></li>
+                <li><a href="{{ url_for('prescription_upload') }}">Upload Prescription</a></li>
                 <li><a href="{{ url_for('stats') }}">Statistics</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('saved_searches') }}">Saved Searches</a></li>
+                    <li><a href="{{ url_for('comparisons') }}">My Comparisons</a></li>
+                    <li><a href="{{ url_for('auth.profile') }}">Profile</a></li>
+                    <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <main class="main-content">
         {% block content %}{% endblock %}
