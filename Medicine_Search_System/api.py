@@ -38,7 +38,7 @@ def token_required(f):
                 token = token[7:]
             
             data = jwt.decode(token, Config.JWT_SECRET_KEY, algorithms=['HS256'])
-            current_user = User.query.get(data['user_id'])
+            current_user = db.session.get(User, data['user_id'])
             
             if not current_user:
                 return jsonify({'error': 'Invalid token'}), 401
@@ -62,7 +62,7 @@ def api_login():
     if not data or not data.get('username') or not data.get('password'):
         return jsonify({'error': 'Username and password are required'}), 400
     
-    user = User.query.filter_by(username=data['username']).first()
+    user = db.session.query(User).filter_by(username=data['username']).first()
     
     if user and user.check_password(data['password']):
         # Generate JWT token
@@ -88,10 +88,10 @@ def api_register():
         return jsonify({'error': 'Username, email, and password are required'}), 400
     
     # Check if user exists
-    if User.query.filter_by(username=data['username']).first():
+    if db.session.query(User).filter_by(username=data['username']).first():
         return jsonify({'error': 'Username already exists'}), 400
     
-    if User.query.filter_by(email=data['email']).first():
+    if db.session.query(User).filter_by(email=data['email']).first():
         return jsonify({'error': 'Email already registered'}), 400
     
     # Create new user
@@ -190,7 +190,7 @@ def api_saved_searches():
         return jsonify({'saved_search': saved_search.to_dict()}), 201
     
     # GET request - return user's saved searches
-    searches = SavedSearch.query.filter_by(user_id=user.id).order_by(SavedSearch.created_at.desc()).all()
+    searches = db.session.query(SavedSearch).filter_by(user_id=user.id).order_by(SavedSearch.created_at.desc()).all()
     return jsonify({
         'saved_searches': [s.to_dict() for s in searches]
     }), 200
@@ -201,7 +201,7 @@ def api_saved_searches():
 def api_delete_saved_search(search_id):
     """API endpoint to delete a saved search"""
     user = request.current_user
-    saved_search = SavedSearch.query.filter_by(id=search_id, user_id=user.id).first()
+    saved_search = db.session.query(SavedSearch).filter_by(id=search_id, user_id=user.id).first()
     
     if not saved_search:
         return jsonify({'error': 'Saved search not found'}), 404
@@ -236,7 +236,7 @@ def api_comparisons():
         return jsonify({'comparison': comparison.to_dict()}), 201
     
     # GET request
-    comparisons = Comparison.query.filter_by(user_id=user.id).order_by(Comparison.created_at.desc()).all()
+    comparisons = db.session.query(Comparison).filter_by(user_id=user.id).order_by(Comparison.created_at.desc()).all()
     return jsonify({
         'comparisons': [c.to_dict() for c in comparisons]
     }), 200

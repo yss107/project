@@ -35,11 +35,11 @@ def register():
             return render_template('auth/register.html')
         
         # Check if user already exists
-        if User.query.filter_by(username=username).first():
+        if db.session.query(User).filter_by(username=username).first():
             flash('Username already exists', 'error')
             return render_template('auth/register.html')
         
-        if User.query.filter_by(email=email).first():
+        if db.session.query(User).filter_by(email=email).first():
             flash('Email already registered', 'error')
             return render_template('auth/register.html')
         
@@ -75,7 +75,7 @@ def login():
             flash('Username and password are required', 'error')
             return render_template('auth/login.html')
         
-        user = User.query.filter_by(username=username).first()
+        user = db.session.query(User).filter_by(username=username).first()
         
         if user and user.check_password(password):
             login_user(user, remember=remember)

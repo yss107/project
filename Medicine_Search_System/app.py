@@ -28,7 +28,7 @@ login_manager.login_message = 'Please log in to access this page.'
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
 
 # Register blueprints
 from auth import auth_bp
@@ -167,7 +167,7 @@ def stats():
 @login_required
 def saved_searches():
     """View user's saved searches"""
-    searches = SavedSearch.query.filter_by(user_id=current_user.id).order_by(SavedSearch.created_at.desc()).all()
+    searches = db.session.query(SavedSearch).filter_by(user_id=current_user.id).order_by(SavedSearch.created_at.desc()).all()
     return render_template('saved_searches.html', searches=searches)
 
 
@@ -198,7 +198,7 @@ def save_search():
 @login_required
 def delete_saved_search(search_id):
     """Delete a saved search"""
-    saved_search = SavedSearch.query.filter_by(id=search_id, user_id=current_user.id).first()
+    saved_search = db.session.query(SavedSearch).filter_by(id=search_id, user_id=current_user.id).first()
     
     if saved_search:
         db.session.delete(saved_search)
@@ -254,7 +254,7 @@ def save_comparison():
 @login_required
 def comparisons():
     """View user's saved comparisons"""
-    user_comparisons = Comparison.query.filter_by(user_id=current_user.id).order_by(Comparison.created_at.desc()).all()
+    user_comparisons = db.session.query(Comparison).filter_by(user_id=current_user.id).order_by(Comparison.created_at.desc()).all()
     return render_template('comparisons.html', comparisons=user_comparisons)
 
 
