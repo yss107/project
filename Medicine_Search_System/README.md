@@ -56,10 +56,18 @@ Medicine_Search_System/
    ```bash
    python app.py
    ```
+   
+   For development with debug mode enabled:
+   ```bash
+   export FLASK_DEBUG=true  # On Windows: set FLASK_DEBUG=true
+   python app.py
+   ```
 
 2. **Access the application**
    - Open your web browser and navigate to: `http://localhost:5000`
    - The application will be running on port 5000 by default
+
+**Security Note**: Debug mode is disabled by default for security. Only enable it in development environments.
 
 3. **Using the Application**
    - **Home Page**: Enter search terms to find medicines
