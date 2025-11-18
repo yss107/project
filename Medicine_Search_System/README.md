@@ -27,6 +27,40 @@ A comprehensive web application for searching and managing medicine information 
 - **Comprehensive Endpoints**: All features available via API
 - See [API_DOCUMENTATION.md](API_DOCUMENTATION.md) for complete API documentation
 
+## Screenshots
+
+### Home Page
+![Home Page](screenshots/01-home-page.png)
+*Main landing page with search functionality and feature overview*
+
+### Search Results
+![Search Results](screenshots/02-search-results.png)
+*Search results with filtering options and medicine selection for comparison*
+
+### Medicine Details
+![Medicine Details](screenshots/03-medicine-details.png)
+*Detailed medicine information including composition, uses, side effects, and alternatives*
+
+### Medicine Comparison
+![Medicine Comparison](screenshots/04-medicine-comparison.png)
+*Side-by-side comparison of multiple medicines*
+
+### Drug Interaction Checker
+![Drug Interactions](screenshots/05-drug-interactions.png)
+*Drug interaction analysis with severity levels and recommendations*
+
+### User Registration
+![User Registration](screenshots/06-user-registration.png)
+*User account registration page*
+
+### Prescription Upload
+![Prescription Upload](screenshots/07-prescription-upload.png)
+*Prescription upload interface for medicine identification*
+
+### Statistics Dashboard
+![Statistics](screenshots/08-statistics.png)
+*Database statistics and top manufacturers*
+
 ## Technology Stack
 
 - **Backend**: Flask (Python)

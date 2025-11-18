@@ -51,5 +51,7 @@ Thumbs.db
 uploads/
 *.jpg
 *.jpeg
-*.png
 *.pdf
+
+# Allow screenshots
+!screenshots/*.png
