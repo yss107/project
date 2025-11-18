@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}My Comparisons - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Your Saved Comparisons</h2>
+    
+    {% if comparisons %}
+        <div class="comparisons-list">
+            {% for comparison in comparisons %}
+                <div class="comparison-card">
+                    <div class="comparison-header">
+                        <h3>{{ comparison.title }}</h3>
+                        <span class="comparison-date">{{ comparison.created_at.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    <div class="comparison-info">
+                        <p>Comparing {{ comparison.medicine_indices.split(',') | length }} medicines</p>
+                    </div>
+                    <div class="comparison-actions">
+                        <a href="{{ url_for('compare', indices=comparison.medicine_indices) }}" class="btn btn-primary">View Comparison</a>
+                        <a href="{{ url_for('interactions', indices=comparison.medicine_indices) }}" class="btn btn-secondary">Check Interactions</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>You haven't saved any comparisons yet.</p>
+            <a href="{{ url_for('search') }}" class="btn btn-primary">Start Comparing</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

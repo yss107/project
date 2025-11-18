@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Prescription Analysis - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Prescription Analysis Results</h2>
+    
+    <div class="analysis-success">
+        <p>✓ Prescription uploaded and analyzed successfully!</p>
+    </div>
+    
+    {% if medicines %}
+        <div class="extracted-medicines">
+            <h3>Extracted Medicines</h3>
+            <p class="subtitle">We found the following medicines in your prescription:</p>
+            
+            <div class="medicines-grid">
+                {% for medicine in medicines %}
+                    <div class="medicine-card">
+                        <div class="medicine-header">
+                            <h4>{{ medicine.name }}</h4>
+                            <span class="confidence-badge confidence-{{ medicine.confidence }}">
+                                {{ medicine.confidence }} confidence
+                            </span>
+                        </div>
+                        <div class="medicine-actions">
+                            <a href="{{ url_for('medicine_detail', index=medicine.index) }}" class="btn btn-primary">View Details</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="prescription-actions">
+                <a href="{{ url_for('compare', indices=','.join(medicines|map(attribute='index')|map('string'))) }}" 
+                   class="btn btn-primary">Compare All</a>
+                <a href="{{ url_for('interactions', indices=','.join(medicines|map(attribute='index')|map('string'))) }}" 
+                   class="btn btn-secondary">Check Interactions</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="no-medicines">
+            <p>No medicines could be extracted from this prescription.</p>
+            <p>Please ensure the image is clear and try again.</p>
+        </div>
+    {% endif %}
+    
+    <div class="info-box">
+        <strong>ℹ️ Note:</strong> 
+        This is an automated analysis and may not be 100% accurate. Always verify the 
+        information with your healthcare provider or pharmacist.
+    </div>
+    
+    <div class="action-buttons">
+        <a href="{{ url_for('prescription_upload') }}" class="btn btn-secondary">Upload Another</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+{% endblock %}
