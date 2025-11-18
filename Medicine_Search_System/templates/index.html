@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="container">
+        <h2>Welcome to Medicine Search System</h2>
+        <p class="hero-subtitle">Search and discover comprehensive information about medicines</p>
+        
+        <div class="search-box">
+            <form action="{{ url_for('search') }}" method="get" class="search-form">
+                <input 
+                    type="text" 
+                    name="q" 
+                    placeholder="Search by medicine name, composition, or use..." 
+                    class="search-input"
+                    required
+                >
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3>Smart Search</h3>
+                <p>Search medicines by name, composition, or therapeutic use</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💊</div>
+                <h3>Detailed Info</h3>
+                <p>View complete information including uses and side effects</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>Alternatives</h3>
+                <p>Find alternative medicines with similar composition</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Statistics</h3>
+                <p>Explore comprehensive database statistics</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <section class="info-section">
+        <h2>About This System</h2>
+        <p>
+            This Medicine Search System is built using the 1mg medicine dataset, providing 
+            comprehensive information about various medicines including their composition, 
+            uses, side effects, and manufacturers. Use the search feature above to find 
+            information about specific medicines or browse by manufacturer.
+        </p>
+        <div class="warning-box">
+            <strong>⚠️ Disclaimer:</strong> This information is for educational purposes only. 
+            Always consult with a qualified healthcare professional before taking any medication.
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Statistics - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="stats-page">
+        <h2>Database Statistics</h2>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">💊</div>
+                <div class="stat-number">{{ stats.total_medicines }}</div>
+                <div class="stat-label">Total Medicines</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🏭</div>
+                <div class="stat-number">{{ stats.total_manufacturers }}</div>
+                <div class="stat-label">Manufacturers</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number">{{ stats.active_count }}</div>
+                <div class="stat-label">Active Medicines</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">❌</div>
+                <div class="stat-number">{{ stats.discontinued_count }}</div>
+                <div class="stat-label">Discontinued</div>
+            </div>
+        </div>
+
+        <div class="top-manufacturers">
+            <h3>Top 10 Manufacturers by Medicine Count</h3>
+            <div class="manufacturer-list">
+                {% for manufacturer, count in stats.top_manufacturers.items() %}
+                <div class="manufacturer-item">
+                    <div class="manufacturer-name">{{ manufacturer }}</div>
+                    <div class="manufacturer-bar">
+                        <div class="manufacturer-fill" style="width: {{ (count / stats.top_manufacturers.values()|list|first * 100) }}%"></div>
+                    </div>
+                    <div class="manufacturer-count">{{ count }} medicine(s)</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+            <a href="{{ url_for('search') }}" class="btn btn-primary">Search Medicines</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

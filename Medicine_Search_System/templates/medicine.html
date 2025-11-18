@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}{{ medicine.name }} - Medicine Search System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="medicine-detail">
+        <div class="breadcrumb">
+            <a href="{{ url_for('index') }}">Home</a> / 
+            <a href="{{ url_for('search') }}">Search</a> / 
+            <span>{{ medicine.name }}</span>
+        </div>
+
+        <div class="detail-header">
+            <h2>{{ medicine.name }}</h2>
+            {% if medicine.is_discontinued == 'Yes' %}
+                <span class="badge badge-discontinued">Discontinued</span>
+            {% else %}
+                <span class="badge badge-active">Active</span>
+            {% endif %}
+        </div>
+
+        <div class="detail-grid">
+            <div class="detail-section">
+                <h3>Basic Information</h3>
+                <div class="info-table">
+                    <div class="info-row">
+                        <span class="info-label">Manufacturer:</span>
+                        <span class="info-value">{{ medicine.manufacturer }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Composition:</span>
+                        <span class="info-value">{{ medicine.composition }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Pack Size:</span>
+                        <span class="info-value">{{ medicine.pack_size_label }}</span>
+                    </div>
+                    {% if medicine.short_composition1 %}
+                    <div class="info-row">
+                        <span class="info-label">Active Ingredient:</span>
+                        <span class="info-value">{{ medicine.short_composition1 }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>Uses</h3>
+                <p class="detail-text">{{ medicine.uses }}</p>
+            </div>
+
+            <div class="detail-section">
+                <h3>Side Effects</h3>
+                <div class="side-effects-list">
+                    {% set effects = medicine.side_effects.split(',') %}
+                    {% for effect in effects %}
+                        <span class="side-effect-tag">{{ effect.strip() }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if alternatives %}
+            <div class="detail-section">
+                <h3>Alternative Medicines</h3>
+                <p class="section-subtitle">Similar medicines with comparable composition:</p>
+                <div class="alternatives-list">
+                    {% for alt in alternatives %}
+                    <div class="alternative-card">
+                        <h4>{{ alt.name }}</h4>
+                        <p><strong>Manufacturer:</strong> {{ alt.manufacturer }}</p>
+                        <p><strong>Composition:</strong> {{ alt.composition }}</p>
+                        <p><strong>Pack Size:</strong> {{ alt.pack_size_label }}</p>
+                        <a href="{{ url_for('medicine_detail', index=alt.index) }}" class="btn btn-secondary">View Details</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Important:</strong> This information is for educational purposes only. 
+            Always consult with a qualified healthcare professional before taking any medication. 
+            Do not self-medicate based on this information.
+        </div>
+
+        <div class="action-buttons">
+            <a href="{{ url_for('search') }}" class="btn btn-secondary">Back to Search</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
