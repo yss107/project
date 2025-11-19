@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Web API Service (CPU)
+  whisper-api-cpu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whisper-api-cpu
+    ports:
+      - "8000:8000"
+    environment:
+      - WANDB_API_KEY=${WANDB_API_KEY:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+      - TARGET_LANGUAGE=es
+      - USE_WANDB=false
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./output:/app/output
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Web API Service (GPU)
+  whisper-api-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu
+    container_name: whisper-api-gpu
+    ports:
+      - "8001:8000"
+    environment:
+      - WANDB_API_KEY=${WANDB_API_KEY:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+      - TARGET_LANGUAGE=es
+      - USE_WANDB=false
+      - CUDA_VISIBLE_DEVICES=0
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./output:/app/output
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Batch Processing Worker
+  whisper-batch-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: whisper-batch-worker
+    environment:
+      - WANDB_API_KEY=${WANDB_API_KEY:-}
+      - HF_TOKEN=${HF_TOKEN:-}
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+      - ./output:/app/output
+    command: python batch_transcriber.py /app/data --output /app/output/results.json
+    restart: "no"
+
+volumes:
+  models:
+  data:
+  output:
