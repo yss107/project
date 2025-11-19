@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whisper-api-ingress
+  namespace: whisper-speech-recognition
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/websocket-services: whisper-api-cpu-service
+spec:
+  tls:
+  - hosts:
+    - whisper-api.example.com
+    secretName: whisper-api-tls
+  rules:
+  - host: whisper-api.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: whisper-api-cpu-service
+            port:
+              number: 80

@@ -30,3 +30,20 @@ pydantic>=2.0.0
 
 # Optional but recommended
 librosa>=0.10.0
+
+# Advanced Features
+# Speaker Identification with pyannote.audio
+pyannote.audio>=3.1.0
+pyannote.core>=5.0.0
+
+# Deep learning emotion detection with wav2vec2
+speechbrain>=0.5.16
+
+# Video processing
+opencv-python>=4.8.0
+ffmpeg-python>=0.2.0
+moviepy>=1.0.3
+
+# Advanced noise suppression (RNNoise wrapper)
+noisereduce>=3.0.0
+webrtcvad>=2.0.10

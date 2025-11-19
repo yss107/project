@@ -1,0 +1,159 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whisper-api-gpu
+  namespace: whisper-speech-recognition
+  labels:
+    app: whisper-api
+    variant: gpu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whisper-api
+      variant: gpu
+  template:
+    metadata:
+      labels:
+        app: whisper-api
+        variant: gpu
+    spec:
+      containers:
+      - name: whisper-api
+        image: whisper-api-gpu:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: TARGET_LANGUAGE
+          valueFrom:
+            configMapKeyRef:
+              name: whisper-config
+              key: TARGET_LANGUAGE
+        - name: USE_WANDB
+          valueFrom:
+            configMapKeyRef:
+              name: whisper-config
+              key: USE_WANDB
+        - name: WANDB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: whisper-secrets
+              key: WANDB_API_KEY
+              optional: true
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: whisper-secrets
+              key: HF_TOKEN
+              optional: true
+        - name: CUDA_VISIBLE_DEVICES
+          value: "0"
+        resources:
+          requests:
+            memory: "8Gi"
+            cpu: "4"
+            nvidia.com/gpu: 1
+          limits:
+            memory: "16Gi"
+            cpu: "8"
+            nvidia.com/gpu: 1
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+        - name: output
+          mountPath: /app/output
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: whisper-models-pvc
+      - name: output
+        persistentVolumeClaim:
+          claimName: whisper-output-pvc
+      # Node selector for GPU nodes
+      nodeSelector:
+        accelerator: nvidia-gpu
+      # Tolerations for GPU nodes
+      tolerations:
+      - key: nvidia.com/gpu
+        operator: Exists
+        effect: NoSchedule
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whisper-api-gpu-service
+  namespace: whisper-speech-recognition
+  labels:
+    app: whisper-api
+    variant: gpu
+spec:
+  type: LoadBalancer
+  selector:
+    app: whisper-api
+    variant: gpu
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: whisper-api-cpu-hpa
+  namespace: whisper-speech-recognition
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: whisper-api-cpu
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 30
+      - type: Pods
+        value: 2
+        periodSeconds: 30
+      selectPolicy: Max

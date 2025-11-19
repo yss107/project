@@ -1,0 +1,156 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: whisper-speech-recognition
+  labels:
+    name: whisper-speech-recognition
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: whisper-config
+  namespace: whisper-speech-recognition
+data:
+  TARGET_LANGUAGE: "es"
+  USE_WANDB: "false"
+  SAMPLE_RATE: "16000"
+  CHUNK_DURATION: "5.0"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: whisper-secrets
+  namespace: whisper-speech-recognition
+type: Opaque
+stringData:
+  WANDB_API_KEY: ""  # Add your Weights & Biases API key
+  HF_TOKEN: ""       # Add your HuggingFace token
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whisper-api-cpu
+  namespace: whisper-speech-recognition
+  labels:
+    app: whisper-api
+    variant: cpu
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: whisper-api
+      variant: cpu
+  template:
+    metadata:
+      labels:
+        app: whisper-api
+        variant: cpu
+    spec:
+      containers:
+      - name: whisper-api
+        image: whisper-api:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: TARGET_LANGUAGE
+          valueFrom:
+            configMapKeyRef:
+              name: whisper-config
+              key: TARGET_LANGUAGE
+        - name: USE_WANDB
+          valueFrom:
+            configMapKeyRef:
+              name: whisper-config
+              key: USE_WANDB
+        - name: WANDB_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: whisper-secrets
+              key: WANDB_API_KEY
+              optional: true
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: whisper-secrets
+              key: HF_TOKEN
+              optional: true
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2"
+          limits:
+            memory: "8Gi"
+            cpu: "4"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+        - name: output
+          mountPath: /app/output
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: whisper-models-pvc
+      - name: output
+        persistentVolumeClaim:
+          claimName: whisper-output-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whisper-api-cpu-service
+  namespace: whisper-speech-recognition
+  labels:
+    app: whisper-api
+    variant: cpu
+spec:
+  type: LoadBalancer
+  selector:
+    app: whisper-api
+    variant: cpu
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8000
+    protocol: TCP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whisper-models-pvc
+  namespace: whisper-speech-recognition
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whisper-output-pvc
+  namespace: whisper-speech-recognition
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
