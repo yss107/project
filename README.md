@@ -16,6 +16,8 @@ Passionate about building production-ready AI/ML solutions with expertise in:
 
 🔗 **Connect with me:** [linkedin.com/in/yash-kumar09](https://www.linkedin.com/in/yash-kumar09/)
 
+📄 **[View Complete Profile & Features Overview →](PROFILE_AND_FEATURES.md)**
+
 ---
 
 ## 🆕 Latest Project
