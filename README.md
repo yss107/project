@@ -2,6 +2,22 @@
 
 A collection of data science, machine learning, and AI projects demonstrating various techniques and applications.
 
+## 👨‍💻 About the Author
+
+**Yash Kumar** - Data Scientist & Machine Learning Engineer
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/yash-kumar09/)
+
+Passionate about building production-ready AI/ML solutions with expertise in:
+- 🎤 Speech Recognition & NLP
+- 🤖 Deep Learning & Computer Vision
+- 📊 Predictive Analytics & Business Intelligence
+- ☁️ MLOps & Cloud Deployment
+
+🔗 **Connect with me:** [linkedin.com/in/yash-kumar09](https://www.linkedin.com/in/yash-kumar09/)
+
+---
+
 ## 🆕 Latest Project
 
 ### Real-time Speech Recognition & Translation with Whisper Large V3
@@ -88,3 +104,36 @@ Included educational materials:
 ## 📄 License
 
 Projects are provided for educational and reference purposes. See individual project directories for specific licenses.
+
+---
+
+## 📬 Contact & Collaboration
+
+### About the Author
+
+I'm **Yash Kumar**, a Data Scientist and Machine Learning Engineer with expertise in building production-ready AI solutions. This repository showcases my work in various domains of data science and machine learning.
+
+### 🔗 Connect with Me
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Yash_Kumar-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/yash-kumar09/)
+[![GitHub](https://img.shields.io/badge/GitHub-yss107-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yss107)
+
+**Professional Profile:** [linkedin.com/in/yash-kumar09](https://www.linkedin.com/in/yash-kumar09/)
+
+### 💼 Open to Opportunities
+
+I'm actively seeking opportunities in:
+- 🎯 Machine Learning Engineering
+- 📊 Data Science & Analytics
+- 🤖 AI/ML Research & Development
+- ☁️ MLOps & Production ML Systems
+
+**Feel free to connect for:**
+- Job opportunities and collaborations
+- Technical discussions and knowledge sharing
+- Open source contributions
+- Consulting and freelance projects
+
+---
+
+**⭐ If you find these projects helpful, please consider giving this repository a star!**

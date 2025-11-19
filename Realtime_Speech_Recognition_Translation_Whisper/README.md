@@ -2,6 +2,8 @@
 
 A production-ready real-time speech recognition and translation system powered by OpenAI's Whisper Large V3 model, integrated with Weights & Biases for MLOps and experiment tracking.
 
+> 👨‍💻 **Developed by [Yash Kumar](https://www.linkedin.com/in/yash-kumar09/)** - Data Scientist & ML Engineer specializing in Speech Recognition and NLP
+
 ## 🌟 Features
 
 - **State-of-the-art Speech Recognition**: Uses OpenAI's Whisper Large V3 model from HuggingFace
@@ -353,7 +355,16 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📧 Contact
 
-For questions or support, please open an issue on GitHub.
+### Project Author
+
+**Yash Kumar** - Data Scientist & ML Engineer
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/yash-kumar09/)
+
+For questions, support, or collaboration opportunities:
+- 💼 **Professional inquiries:** [linkedin.com/in/yash-kumar09](https://www.linkedin.com/in/yash-kumar09/)
+- 🐛 **Bug reports & feature requests:** Open an issue on GitHub
+- 🤝 **Contributions:** Pull requests are welcome!
 
 ---
 
