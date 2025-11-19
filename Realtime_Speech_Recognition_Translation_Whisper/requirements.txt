@@ -1,0 +1,26 @@
+# Core ML libraries
+torch>=2.0.0
+transformers>=4.35.0
+accelerate>=0.24.0
+
+# Whisper and Audio Processing
+openai-whisper>=20231117
+sounddevice>=0.4.6
+soundfile>=0.12.1
+pyaudio>=0.2.14
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Translation
+deep-translator>=1.11.4
+
+# Weights & Biases for MLOps
+wandb>=0.16.0
+
+# Utilities
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+pydantic>=2.0.0
+
+# Optional but recommended
+librosa>=0.10.0

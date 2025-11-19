@@ -61,3 +61,12 @@ Face_Emotion_Detection_Realtime/emotion_screenshot_*.png
 Face_Emotion_Detection_Realtime/training_history.png
 Face_Emotion_Detection_Realtime/confusion_matrix.png
 Face_Emotion_Detection_Realtime/*.csv
+
+# Whisper Realtime Translation project files
+Realtime_Speech_Recognition_Translation_Whisper/.env
+Realtime_Speech_Recognition_Translation_Whisper/*.wav
+Realtime_Speech_Recognition_Translation_Whisper/*.mp3
+Realtime_Speech_Recognition_Translation_Whisper/*.m4a
+Realtime_Speech_Recognition_Translation_Whisper/*.json
+Realtime_Speech_Recognition_Translation_Whisper/wandb/
+Realtime_Speech_Recognition_Translation_Whisper/.wandb/
