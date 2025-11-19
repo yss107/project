@@ -252,6 +252,12 @@ mypy .
 This project now includes advanced extensions:
 
 - ✅ **Web Interface with FastAPI** - REST API and interactive web UI
+
+### Web Interface Preview
+
+![Web Interface Screenshot](web_interface_screenshot.png)
+
+The web interface provides an intuitive way to interact with the speech recognition and translation system through your browser.
 - ✅ **WebSocket Support** - Real-time streaming communication
 - ✅ **Multiple Language Translation** - Translate to multiple languages simultaneously
 - ✅ **Custom Vocabulary** - Domain-specific term recognition

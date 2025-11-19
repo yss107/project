@@ -10,6 +10,10 @@ This document describes the new extended features added to the Whisper Real-time
 
 A complete web application with REST API and interactive web UI.
 
+**Web Interface Preview:**
+
+![Web Interface Screenshot](web_interface_screenshot.png)
+
 **Key Features:**
 - RESTful API endpoints for transcription and translation
 - Interactive web interface accessible via browser
