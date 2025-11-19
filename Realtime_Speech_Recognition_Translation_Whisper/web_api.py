@@ -259,89 +259,257 @@ async def root():
     <head>
         <title>Whisper Real-time Speech Translation</title>
         <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                min-height: 100vh;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 20px;
+            }
+            
+            .container {
                 max-width: 1200px;
                 margin: 0 auto;
-                padding: 20px;
-                background: #f5f5f5;
+                background: rgba(255, 255, 255, 0.98);
+                padding: 40px;
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                animation: fadeIn 0.6s ease-in;
             }
-            .container {
-                background: white;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
             }
+            
             h1 {
-                color: #333;
-                border-bottom: 3px solid #007bff;
-                padding-bottom: 10px;
+                color: #2d3748;
+                font-size: 2.5em;
+                margin-bottom: 15px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-align: center;
+                font-weight: 700;
+                letter-spacing: -1px;
             }
+            
+            h2 {
+                color: #4a5568;
+                font-size: 1.5em;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+                font-weight: 600;
+            }
+            
             .section {
-                margin: 30px 0;
+                margin: 35px 0;
+                padding: 30px;
+                background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                border: 1px solid rgba(102, 126, 234, 0.1);
+                transition: all 0.3s ease;
             }
+            
+            .section:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            }
+            
             .button {
-                background: #007bff;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
-                padding: 12px 24px;
+                padding: 14px 28px;
                 border: none;
-                border-radius: 5px;
+                border-radius: 10px;
                 cursor: pointer;
                 font-size: 16px;
-                margin: 5px;
+                font-weight: 600;
+                margin: 8px 8px 8px 0;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+                position: relative;
+                overflow: hidden;
             }
+            
+            .button::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+                transition: left 0.5s;
+            }
+            
+            .button:hover::before {
+                left: 100%;
+            }
+            
             .button:hover {
-                background: #0056b3;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
             }
+            
+            .button:active {
+                transform: translateY(0);
+            }
+            
             .button:disabled {
-                background: #ccc;
+                background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
                 cursor: not-allowed;
+                box-shadow: none;
+                transform: none;
             }
+            
             .output {
-                background: #f8f9fa;
-                padding: 15px;
-                border-radius: 5px;
-                margin: 10px 0;
-                min-height: 100px;
-                border-left: 4px solid #007bff;
+                background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+                padding: 20px;
+                border-radius: 12px;
+                margin: 15px 0;
+                min-height: 120px;
+                border-left: 5px solid #667eea;
+                box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+                transition: all 0.3s ease;
             }
+            
+            .output:hover {
+                border-left-color: #764ba2;
+                box-shadow: inset 0 2px 8px rgba(102, 126, 234, 0.1);
+            }
+            
             .transcription {
                 font-size: 18px;
-                color: #333;
+                color: #2d3748;
                 margin: 10px 0;
+                line-height: 1.6;
+                font-weight: 500;
             }
+            
             .translation {
                 font-size: 16px;
-                color: #666;
+                color: #4a5568;
                 margin: 10px 0;
                 padding-left: 20px;
+                line-height: 1.6;
+                border-left: 3px solid #a0aec0;
             }
+            
             input[type="file"] {
-                padding: 10px;
-                margin: 10px 0;
+                padding: 12px;
+                margin: 15px 0;
+                border: 2px dashed #667eea;
+                border-radius: 10px;
+                background: rgba(102, 126, 234, 0.05);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                width: 100%;
             }
+            
+            input[type="file"]:hover {
+                border-color: #764ba2;
+                background: rgba(118, 75, 162, 0.08);
+            }
+            
             select, input[type="text"] {
-                padding: 10px;
-                margin: 5px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
+                padding: 12px;
+                margin: 8px 8px 8px 0;
+                border: 2px solid #e2e8f0;
+                border-radius: 10px;
+                font-size: 14px;
+                background: white;
+                transition: all 0.3s ease;
+                min-width: 200px;
+            }
+            
+            select:focus, input[type="text"]:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+            
+            .status {
+                padding: 15px 20px;
+                border-radius: 10px;
+                margin: 15px 0;
+                font-weight: 600;
+                display: inline-block;
+                animation: pulse 2s ease-in-out infinite;
+            }
+            
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.8; }
+            }
+            
+            .status.connected {
+                background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+                color: white;
+                box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+            }
+            
+            .status.disconnected {
+                background: linear-gradient(135deg, #fc8181 0%, #f56565 100%);
+                color: white;
+                box-shadow: 0 4px 15px rgba(252, 129, 129, 0.4);
+            }
+            
+            .language-select {
+                margin: 15px 0;
+            }
+            
+            .language-select label {
+                display: block;
+                margin-bottom: 8px;
+                color: #4a5568;
+                font-weight: 600;
                 font-size: 14px;
             }
-            .status {
-                padding: 10px;
-                border-radius: 5px;
-                margin: 10px 0;
+            
+            ul {
+                margin: 15px 0;
+                padding-left: 0;
             }
-            .status.connected {
-                background: #d4edda;
-                color: #155724;
+            
+            li {
+                margin: 12px 0;
+                padding: 12px 15px;
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+                border-radius: 8px;
+                list-style: none;
+                transition: all 0.3s ease;
+                border-left: 3px solid #667eea;
             }
-            .status.disconnected {
-                background: #f8d7da;
-                color: #721c24;
+            
+            li:hover {
+                transform: translateX(5px);
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+                border-left-color: #764ba2;
             }
-            .language-select {
-                margin: 10px 0;
+            
+            code {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 4px 10px;
+                border-radius: 6px;
+                font-family: 'Courier New', monospace;
+                font-weight: 600;
+                font-size: 13px;
+            }
+            
+            p {
+                color: #4a5568;
+                line-height: 1.6;
+                margin-bottom: 15px;
             }
         </style>
     </head>
