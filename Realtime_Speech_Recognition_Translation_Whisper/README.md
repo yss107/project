@@ -247,6 +247,40 @@ flake8 .
 mypy .
 ```
 
+## 🚀 Extended Features (NEW!)
+
+This project now includes advanced extensions:
+
+- ✅ **Web Interface with FastAPI** - REST API and interactive web UI
+- ✅ **WebSocket Support** - Real-time streaming communication
+- ✅ **Multiple Language Translation** - Translate to multiple languages simultaneously
+- ✅ **Custom Vocabulary** - Domain-specific term recognition
+- ✅ **Speaker Diarization** - Identify different speakers
+- ✅ **Emotion Detection** - Analyze emotional tone in speech
+- ✅ **Audio Enhancement** - Noise reduction and preprocessing
+- ✅ **Subtitle Export** - Generate SRT/VTT subtitle files
+
+**Quick Start with Extended Features:**
+
+```bash
+# Start web interface
+python extended_translator.py --mode web --web-port 8000
+
+# Process file with all features
+python extended_translator.py --mode file --file audio.wav \
+    --languages es fr de \
+    --speaker-diarization \
+    --emotion-detection \
+    --export-subtitle srt
+
+# Real-time with enhancements
+python extended_translator.py --mode realtime \
+    --languages es fr \
+    --enhance-audio
+```
+
+**📖 See [EXTENDED_FEATURES.md](EXTENDED_FEATURES.md) for complete documentation**
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
