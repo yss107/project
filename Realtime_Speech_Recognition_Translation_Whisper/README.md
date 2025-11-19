@@ -85,13 +85,27 @@ python batch_transcriber.py path/to/audio.wav --wandb
 
 ```
 Realtime_Speech_Recognition_Translation_Whisper/
-├── README.md                          # This file
+├── README.md                          # Comprehensive documentation
+├── QUICKSTART.md                      # Quick start guide
+├── LICENSE                            # MIT License
 ├── requirements.txt                   # Python dependencies
+├── config.py                          # Configuration file
+├── .env.example                       # Environment variables template
+│
 ├── realtime_speech_translator.py     # Main real-time application
 ├── batch_transcriber.py              # Batch processing script
-├── example_usage.py                  # Example use cases
-└── .env.example                      # Environment variables template
+├── example_usage.py                  # Interactive examples
+├── quick_demo.py                     # Quick translation demo
+├── test_setup.py                     # Setup verification
+│
+└── Whisper_Realtime_Demo.ipynb       # Jupyter notebook demo
 ```
+
+## 📖 Documentation
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Get started in 5 minutes
+- **[README.md](README.md)** - Full documentation (this file)
+- **[LICENSE](LICENSE)** - MIT License details
 
 ## 🔧 Configuration
 
