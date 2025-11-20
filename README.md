@@ -2,35 +2,10 @@
 
 A collection of data science, machine learning, and AI projects demonstrating various techniques and applications.
 
-## 🆕 Latest Project
-
-### Real-time Speech Recognition & Translation with Whisper Large V3
-**[View Project →](Realtime_Speech_Recognition_Translation_Whisper/)**
-
-A production-ready real-time speech recognition and translation system powered by OpenAI's Whisper Large V3 model, integrated with Weights & Biases for MLOps.
-
-**Key Features:**
-- Real-time speech recognition using state-of-the-art Whisper Large V3
-- Multi-language translation to 100+ languages
-- Weights & Biases integration for experiment tracking
-- GPU acceleration with automatic CPU fallback
-- Comprehensive documentation and examples
-
-**Quick Start:**
-```bash
-cd Realtime_Speech_Recognition_Translation_Whisper
-pip install -r requirements.txt
-python realtime_speech_translator.py
-```
-
-See the [QUICKSTART Guide](Realtime_Speech_Recognition_Translation_Whisper/QUICKSTART.md) for detailed instructions.
-
----
 
 ## All Projects
 
 ### 🎤 Natural Language Processing & Speech
-- **[Real-time Speech Recognition & Translation](Realtime_Speech_Recognition_Translation_Whisper/)** - Whisper Large V3 with W&B integration
 - **[Speech Recognition - YouTube & VLC](Speech_Recognition_Youtube_and_VLC_Player_project/)** - Voice-controlled media player
 - **[Language Translator](Language_Translator_using_Python_and_GoogleAPI/)** - Real-time translation using Google API
 
