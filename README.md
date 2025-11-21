@@ -101,6 +101,12 @@ A collection of data science, machine learning, and AI projects demonstrating va
 
 ## All Projects
 
+### 🚗 Autonomous Vehicles & Physical AI
+- **[PhysicalAI-Autonomous-Vehicles](PhysicalAI_Autonomous_Vehicles/)** - Comprehensive toolkit for NVIDIA's PhysicalAI-Autonomous-Vehicles dataset
+  - 310,895 clips (1,727 hours) of multi-sensor driving data
+  - 7 cameras, LiDAR, and radar data from 25 countries
+  - Complete data loading utilities and examples
+
 ### 🎤 Natural Language Processing & Speech
 - **[Speech Recognition - YouTube & VLC](Speech_Recognition_Youtube_and_VLC_Player_project/)** - Voice-controlled media player
 - **[Language Translator](Language_Translator_using_Python_and_GoogleAPI/)** - Real-time translation using Google API
