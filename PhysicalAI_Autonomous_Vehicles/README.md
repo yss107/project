@@ -97,10 +97,13 @@ pip install -r requirements.txt
 ### Basic Usage
 
 ```python
-from utils.data_loader import DatasetLoader
+from utils import DatasetLoader, CameraLoader, LiDARLoader, RadarLoader
 
-# Initialize loader
+# Initialize loaders
 loader = DatasetLoader(data_root="/path/to/dataset")
+camera_loader = CameraLoader(data_root="/path/to/dataset")
+lidar_loader = LiDARLoader(data_root="/path/to/dataset")
+radar_loader = RadarLoader(data_root="/path/to/dataset")
 
 # Load clip metadata
 metadata = loader.load_metadata()
@@ -114,13 +117,19 @@ us_daytime = metadata[
 
 # Load camera data for a specific clip
 clip_id = "example-uuid"
-camera_data = loader.load_camera_clip(clip_id, camera="front_wide_120fov")
+frames, timestamps = camera_loader.load_video_from_chunk(
+    clip_id, 
+    camera_name="camera_front_wide_120fov"
+)
 
 # Load LiDAR point cloud
-lidar_data = loader.load_lidar_clip(clip_id)
+lidar_data = lidar_loader.load_pointcloud(clip_id)
 
 # Load radar data
-radar_data = loader.load_radar_clip(clip_id, radar_sensor="front_center")
+radar_data = radar_loader.load_radar_data(
+    clip_id, 
+    radar_sensor="radar_front_center_mrr_2"
+)
 ```
 
 ## 📚 Key Components
@@ -132,17 +141,14 @@ radar_data = loader.load_radar_clip(clip_id, radar_sensor="front_center")
 - `radar_utils.py`: Radar data processing
 - `calibration_utils.py`: Sensor calibration tools
 
-### 2. Visualization (`visualization/`)
-- Camera view display
-- Point cloud rendering
-- Radar visualization
-- Multi-sensor fusion display
+### 2. Documentation (`docs/`)
+- `DATA_FORMAT.md`: Data format specifications
+- `CALIBRATION.md`: Calibration guide
+- `API_REFERENCE.md`: Complete API documentation
+- `FAQ.md`: Frequently asked questions
 
 ### 3. Examples (`examples/`)
-- `01_data_exploration.ipynb`: Dataset exploration
-- `02_sensor_visualization.ipynb`: Visualizing sensor data
-- `03_metadata_filtering.ipynb`: Querying and filtering
-- `04_calibration_example.ipynb`: Using calibration data
+- `01_getting_started.ipynb`: Dataset exploration and basic usage
 
 ## 📊 Data Characteristics
 

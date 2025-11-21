@@ -5,6 +5,7 @@ This module provides utilities for loading and processing camera data,
 including video loading, frame extraction, and timestamp handling.
 """
 
+import io
 import os
 import zipfile
 from pathlib import Path
@@ -74,7 +75,7 @@ class CameraLoader:
             # Load timestamps
             if timestamp_filename in zf.namelist():
                 timestamp_bytes = zf.read(timestamp_filename)
-                timestamps = pd.read_parquet(timestamp_bytes)
+                timestamps = pd.read_parquet(io.BytesIO(timestamp_bytes))
         
         return frames, timestamps
     
