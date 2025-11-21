@@ -6,6 +6,8 @@
 
 A comprehensive Python toolkit for working with NVIDIA's PhysicalAI-Autonomous-Vehicles dataset - one of the largest, most geographically diverse collections of multi-sensor data for autonomous vehicle research.
 
+![Project Demo](readme-resources/project-demo.png)
+
 ## 📊 Dataset Overview
 
 The PhysicalAI-Autonomous-Vehicles dataset provides:

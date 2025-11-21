@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhysicalAI-Autonomous-Vehicles Dataset Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            font-size: 1.8em;
+            color: #2a5298;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(102,126,234,0.3);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.95;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature-card h3 {
+            color: #2a5298;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .feature-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .feature-card li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .feature-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-top: 15px;
+        }
+        
+        .code-comment {
+            color: #6a9955;
+        }
+        
+        .code-keyword {
+            color: #569cd6;
+        }
+        
+        .code-string {
+            color: #ce9178;
+        }
+        
+        .code-function {
+            color: #dcdcaa;
+        }
+        
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .sensor-card {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .sensor-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .sensor-name {
+            font-weight: 600;
+            color: #2a5298;
+            margin-bottom: 5px;
+        }
+        
+        .sensor-spec {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+        }
+        
+        .nvidia-badge {
+            display: inline-block;
+            background: #76b900;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 PhysicalAI-Autonomous-Vehicles</h1>
+            <div class="subtitle">Python Toolkit for NVIDIA's Autonomous Vehicle Dataset</div>
+            <div class="badges">
+                <span class="badge">Python 3.8+</span>
+                <span class="badge">310,895 Clips</span>
+                <span class="badge">1,727 Hours</span>
+                <span class="badge">25 Countries</span>
+                <span class="badge">~100TB Data</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>📊 Dataset Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">310,895</div>
+                        <div class="stat-label">20-Second Clips</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">1,727</div>
+                        <div class="stat-label">Hours of Driving</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">25</div>
+                        <div class="stat-label">Countries</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2,500+</div>
+                        <div class="stat-label">Cities</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🎥 Multi-Sensor Coverage</h2>
+                <div class="sensor-grid">
+                    <div class="sensor-card">
+                        <div class="sensor-icon">📷</div>
+                        <div class="sensor-name">7 Cameras</div>
+                        <div class="sensor-spec">1080p @ 30fps</div>
+                    </div>
+                    <div class="sensor-card">
+                        <div class="sensor-icon">🔵</div>
+                        <div class="sensor-name">1 LiDAR</div>
+                        <div class="sensor-spec">360° @ 10Hz</div>
+                    </div>
+                    <div class="sensor-card">
+                        <div class="sensor-icon">📡</div>
+                        <div class="sensor-name">10 Radars</div>
+                        <div class="sensor-spec">SRR/MRR/LRR</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🔧 Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>Data Loaders</h3>
+                        <ul>
+                            <li>Camera (MP4) loading</li>
+                            <li>LiDAR (Draco) decoding</li>
+                            <li>Radar processing</li>
+                            <li>Metadata filtering</li>
+                            <li>Calibration utilities</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Documentation</h3>
+                        <ul>
+                            <li>Complete API reference</li>
+                            <li>Data format specs</li>
+                            <li>Calibration guide</li>
+                            <li>FAQ (30+ questions)</li>
+                            <li>Example notebooks</li>
+                        </ul>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Capabilities</h3>
+                        <ul>
+                            <li>Sensor fusion</li>
+                            <li>Coordinate transforms</li>
+                            <li>Point cloud filtering</li>
+                            <li>Multi-camera mosaics</li>
+                            <li>Easy installation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>💻 Quick Start Example</h2>
+                <div class="code-block">
+<span class="code-keyword">from</span> utils <span class="code-keyword">import</span> DatasetLoader, CameraLoader, LiDARLoader
+
+<span class="code-comment"># Initialize loaders</span>
+loader = <span class="code-function">DatasetLoader</span>(<span class="code-string">'/path/to/dataset'</span>)
+camera = <span class="code-function">CameraLoader</span>(<span class="code-string">'/path/to/dataset'</span>)
+
+<span class="code-comment"># Filter clips by country and time</span>
+us_daytime = loader.<span class="code-function">filter_clips</span>(
+    country=<span class="code-string">'United States'</span>,
+    hour_range=(<span class="code-number">6</span>, <span class="code-number">18</span>),
+    radar_config=<span class="code-string">'high'</span>
+)
+
+<span class="code-comment"># Load sensor data</span>
+frames, timestamps = camera.<span class="code-function">load_video_from_chunk</span>(
+    clip_id, <span class="code-string">'camera_front_wide_120fov'</span>
+)
+
+<span class="code-comment"># Load LiDAR point cloud</span>
+lidar = <span class="code-function">LiDARLoader</span>(<span class="code-string">'/path/to/dataset'</span>)
+points = lidar.<span class="code-function">load_spin</span>(clip_id, spin_idx=<span class="code-number">0</span>)
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🌍 Geographic Coverage</h2>
+                <p style="margin-bottom: 15px;">Data collected from diverse locations:</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>🇺🇸 United States</h3>
+                        <p>155,360 clips (50%)</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🇪🇺 European Union</h3>
+                        <p>155,535 clips from 24 countries</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🌦️ Environmental Diversity</h3>
+                        <p>Multiple weather, traffic patterns, road types, and times of day</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>PhysicalAI-Autonomous-Vehicles Toolkit v1.0.0</strong></p>
+            <p>Created by Yash Kumar | 2025</p>
+            <div class="nvidia-badge">Powered by NVIDIA Dataset</div>
+        </div>
+    </div>
+</body>
+</html>
