@@ -1,0 +1,92 @@
+# Configuration file for PhysicalAI-Autonomous-Vehicles dataset
+# Copy this file to config.yaml and update with your local paths
+
+dataset:
+  # Root directory where the dataset is stored
+  root_path: "/path/to/PhysicalAI-Autonomous-Vehicles"
+  
+  # Cache directory for processed data (optional)
+  cache_dir: "./cache"
+  
+  # Temporary directory for extraction
+  temp_dir: "/tmp/physical_ai_av"
+
+sensors:
+  # Camera sensors to load (set to null to load all)
+  cameras:
+    - camera_front_wide_120fov
+    - camera_front_tele_30fov
+    - camera_cross_left_120fov
+    - camera_cross_right_120fov
+    - camera_rear_left_70fov
+    - camera_rear_right_70fov
+    - camera_rear_tele_30fov
+  
+  # Radar sensors to load (set to null to load all available)
+  radars: null  # Load all available
+  
+  # LiDAR (always loaded when available)
+  lidar: true
+
+filtering:
+  # Default filtering criteria
+  countries:
+    - United States
+    - Germany
+    - France
+  
+  # Time of day (hour range)
+  daytime_hours: [6, 18]
+  nighttime_hours: [18, 6]
+  
+  # Radar configuration preference
+  radar_config: "high"  # Options: NA, low, med, high
+
+processing:
+  # Point cloud processing
+  lidar:
+    downsample_voxel_size: 0.1  # meters
+    max_range: 100.0  # meters
+    min_range: 1.0  # meters
+  
+  # Radar processing
+  radar:
+    min_snr: 5.0  # dB
+    max_range: 200.0  # meters
+    min_range: 0.5  # meters
+  
+  # Video processing
+  video:
+    target_fps: 30
+    resize_width: null  # null to keep original
+    resize_height: null
+
+visualization:
+  # Plotting defaults
+  figure_size: [12, 8]
+  dpi: 100
+  
+  # 3D visualization
+  point_cloud:
+    point_size: 1
+    colormap: "viridis"
+  
+  # Camera mosaic layout
+  camera_mosaic_layout: "2x4"  # rows x columns
+
+performance:
+  # Number of workers for parallel processing
+  num_workers: 4
+  
+  # Batch size for processing
+  batch_size: 10
+  
+  # Enable caching
+  use_cache: true
+
+logging:
+  # Logging level: DEBUG, INFO, WARNING, ERROR
+  level: "INFO"
+  
+  # Log file path (null for stdout only)
+  log_file: null
