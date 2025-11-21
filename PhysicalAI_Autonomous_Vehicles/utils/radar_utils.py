@@ -5,6 +5,7 @@ This module provides utilities for loading and processing radar point cloud data
 from multiple radar sensors with different configurations (SRR, MRR, LRR).
 """
 
+import io
 import zipfile
 from pathlib import Path
 from typing import Optional, List, Dict
@@ -103,7 +104,6 @@ class RadarLoader:
             parquet_bytes = zf.read(parquet_filename)
             
             # Read parquet from bytes
-            import io
             radar_df = pd.read_parquet(io.BytesIO(parquet_bytes))
         
         return radar_df

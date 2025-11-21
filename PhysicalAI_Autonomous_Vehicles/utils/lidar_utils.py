@@ -5,6 +5,7 @@ This module provides utilities for loading and processing LiDAR point cloud data
 including Draco-encoded point cloud decoding and visualization support.
 """
 
+import io
 import zipfile
 from pathlib import Path
 from typing import Optional, Tuple
@@ -73,7 +74,6 @@ class LiDARLoader:
             parquet_bytes = zf.read(parquet_filename)
             
             # Read parquet from bytes
-            import io
             pointcloud_df = pd.read_parquet(io.BytesIO(parquet_bytes))
         
         return pointcloud_df

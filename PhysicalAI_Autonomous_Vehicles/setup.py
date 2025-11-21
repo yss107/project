@@ -13,7 +13,7 @@ setup(
     name="physical-ai-av-toolkit",
     version="1.0.0",
     author="Yash Kumar",
-    author_email="yash.kumar@example.com",
+    author_email="yash.kumar09@outlook.com",  # Update with actual email
     description="Python toolkit for NVIDIA's PhysicalAI-Autonomous-Vehicles dataset",
     long_description=long_description,
     long_description_content_type="text/markdown",
