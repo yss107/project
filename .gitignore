@@ -70,3 +70,10 @@ Realtime_Speech_Recognition_Translation_Whisper/*.m4a
 Realtime_Speech_Recognition_Translation_Whisper/*.json
 Realtime_Speech_Recognition_Translation_Whisper/wandb/
 Realtime_Speech_Recognition_Translation_Whisper/.wandb/
+
+# Django Remote Sensing Project files
+Remote_Sensing_Django_Project/*.sqlite3
+Remote_Sensing_Django_Project/db.sqlite3
+Remote_Sensing_Django_Project/staticfiles/
+Remote_Sensing_Django_Project/media/
+Remote_Sensing_Django_Project/.env
