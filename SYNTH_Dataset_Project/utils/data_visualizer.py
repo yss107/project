@@ -323,7 +323,6 @@ class DataVisualizer:
             return
         
         # Check seaborn version for corner parameter support (available in 0.11.2+)
-        import seaborn as sns
         try:
             # Extract version and check if corner is supported
             sns_version = tuple(map(int, sns.__version__.split('.')[:3]))
