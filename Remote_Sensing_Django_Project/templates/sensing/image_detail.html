@@ -1,0 +1,135 @@
+{% extends 'sensing/base.html' %}
+
+{% block title %}{{ image.image_id }} - Remote Sensing Project{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-5"><i class="fas fa-image"></i> {{ image.image_id }}</h1>
+        <p class="lead">Detailed information about this satellite image</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Image Details -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Image Information</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <th width="30%"><i class="fas fa-id-card"></i> Image ID</th>
+                                <td>{{ image.image_id }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-calendar"></i> Timestamp</th>
+                                <td>{{ image.timestamp|date:"Y-m-d H:i:s" }}</td>
+                            </tr>
+                            {% if image.grid_cell %}
+                            <tr>
+                                <th><i class="fas fa-map-marker-alt"></i> Grid Cell</th>
+                                <td>{{ image.grid_cell }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if image.latitude and image.longitude %}
+                            <tr>
+                                <th><i class="fas fa-globe"></i> Coordinates</th>
+                                <td>
+                                    Latitude: {{ image.latitude|floatformat:6 }}<br>
+                                    Longitude: {{ image.longitude|floatformat:6 }}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% if image.cloud_cover %}
+                            <tr>
+                                <th><i class="fas fa-cloud"></i> Cloud Cover</th>
+                                <td>{{ image.cloud_cover }}%</td>
+                            </tr>
+                            {% endif %}
+                            {% if image.spatial_resolution %}
+                            <tr>
+                                <th><i class="fas fa-ruler"></i> Spatial Resolution</th>
+                                <td>{{ image.spatial_resolution }} meters</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <th><i class="fas fa-tag"></i> Dataset Split</th>
+                                <td><span class="badge bg-primary">{{ image.get_dataset_split_display }}</span></td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-clock"></i> Created</th>
+                                <td>{{ image.created_at|date:"Y-m-d H:i:s" }}</td>
+                            </tr>
+                            <tr>
+                                <th><i class="fas fa-sync"></i> Last Updated</th>
+                                <td>{{ image.updated_at|date:"Y-m-d H:i:s" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Embeddings -->
+            {% if image.embedding_vector %}
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-vector-square"></i> Embedding Vector</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Embedding vector for this image (first 100 characters):</p>
+                    <pre class="bg-light p-3 rounded"><code>{{ image.embedding_vector|slice:":100" }}...</code></pre>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <!-- Actions -->
+            <div class="card mb-4">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0"><i class="fas fa-tools"></i> Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'sensing:image_list' %}" class="btn btn-secondary btn-block w-100 mb-2">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                    <a href="{% url 'admin:sensing_satelliteimage_change' image.pk %}" class="btn btn-primary btn-block w-100">
+                        <i class="fas fa-edit"></i> Edit in Admin
+                    </a>
+                </div>
+            </div>
+
+            <!-- Analyses -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-line"></i> Analyses ({{ analyses.count }})</h5>
+                </div>
+                <div class="card-body">
+                    {% if analyses %}
+                    <ul class="list-group list-group-flush">
+                        {% for analysis in analyses %}
+                        <li class="list-group-item">
+                            <strong>{{ analysis.analysis_type }}</strong><br>
+                            <small class="text-muted">
+                                {{ analysis.performed_at|date:"Y-m-d H:i" }}
+                                {% if analysis.confidence_score %}
+                                <br>Confidence: {{ analysis.confidence_score|floatformat:2 }}
+                                {% endif %}
+                            </small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted mb-0">No analyses performed yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

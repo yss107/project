@@ -1,0 +1,123 @@
+{% extends 'sensing/base.html' %}
+
+{% block title %}Home - Remote Sensing Project{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="display-4"><i class="fas fa-satellite"></i> Remote Sensing Django Project</h1>
+                <p class="lead">Explore and analyze satellite imagery using the Major-TOM/Core-AlphaEarth-Embeddings dataset from HuggingFace</p>
+                <div class="mt-4">
+                    <a href="{% url 'sensing:image_list' %}" class="btn btn-light btn-lg me-2">
+                        <i class="fas fa-images"></i> Browse Images
+                    </a>
+                    <a href="{% url 'sensing:dataset_info' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <i class="fas fa-globe fa-10x opacity-50"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Statistics -->
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <i class="fas fa-images fa-3x mb-3"></i>
+                <h2>{{ total_images }}</h2>
+                <p>Satellite Images</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <i class="fas fa-chart-line fa-3x mb-3"></i>
+                <h2>{{ total_analyses }}</h2>
+                <p>Analyses Performed</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card text-center">
+                <i class="fas fa-database fa-3x mb-3"></i>
+                <h2>HuggingFace</h2>
+                <p>Dataset Source</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Images -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="mb-4"><i class="fas fa-clock"></i> Recent Images</h2>
+            {% if recent_images %}
+            <div class="row">
+                {% for image in recent_images %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ image.image_id }}</h5>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar"></i> {{ image.timestamp|date:"Y-m-d H:i" }}<br>
+                                    {% if image.grid_cell %}
+                                    <i class="fas fa-map-marker-alt"></i> Grid: {{ image.grid_cell }}<br>
+                                    {% endif %}
+                                    {% if image.cloud_cover %}
+                                    <i class="fas fa-cloud"></i> Cloud Cover: {{ image.cloud_cover }}%
+                                    {% endif %}
+                                </small>
+                            </p>
+                            <a href="{% url 'sensing:image_detail' image.pk %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No images available yet. Add some images through the admin panel or load data from the HuggingFace dataset.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <h2 class="mb-4"><i class="fas fa-star"></i> Key Features</h2>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-database text-primary"></i> HuggingFace Integration</h5>
+                    <p class="card-text">Seamlessly access and work with the Major-TOM/Core-AlphaEarth-Embeddings dataset.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-search text-success"></i> Image Analysis</h5>
+                    <p class="card-text">Store and manage analysis results for satellite imagery with detailed metadata.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-chart-bar text-warning"></i> Data Management</h5>
+                    <p class="card-text">Organize and filter satellite images by various parameters and timestamps.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
