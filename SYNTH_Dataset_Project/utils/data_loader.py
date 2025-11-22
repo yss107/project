@@ -39,7 +39,7 @@ class SYNTHLoader:
         self, 
         split: Optional[str] = None,
         streaming: bool = False,
-        trust_remote_code: bool = True
+        trust_remote_code: bool = False
     ) -> Union[Dataset, DatasetDict]:
         """
         Load the SYNTH dataset from HuggingFace.
@@ -47,7 +47,8 @@ class SYNTHLoader:
         Args:
             split (str, optional): Specific split to load ('train', 'test', etc.)
             streaming (bool): Whether to stream the dataset (useful for large datasets)
-            trust_remote_code (bool): Whether to trust remote code in dataset
+            trust_remote_code (bool): Whether to trust remote code in dataset.
+                                     Set to True only if you trust the dataset source.
             
         Returns:
             Dataset or DatasetDict: The loaded dataset

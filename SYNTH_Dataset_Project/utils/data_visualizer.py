@@ -323,9 +323,11 @@ class DataVisualizer:
             return
         
         try:
+            # Try with corner parameter (seaborn >= 0.11.2)
             sns.pairplot(df_subset, hue=hue, height=height, corner=True)
-        except TypeError:
+        except (TypeError, AttributeError):
             # Fallback for older seaborn versions that don't support corner parameter
+            # or if there's an incompatibility with the corner parameter
             sns.pairplot(df_subset, hue=hue, height=height)
         
         plt.suptitle('Pairplot of Features', y=1.0)
