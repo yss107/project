@@ -322,12 +322,19 @@ class DataVisualizer:
             print("⚠ No data to plot")
             return
         
+        # Check seaborn version for corner parameter support (available in 0.11.2+)
+        import seaborn as sns
         try:
-            # Try with corner parameter (seaborn >= 0.11.2)
+            # Extract version and check if corner is supported
+            sns_version = tuple(map(int, sns.__version__.split('.')[:3]))
+            use_corner = sns_version >= (0, 11, 2)
+        except (ValueError, AttributeError):
+            # If version parsing fails, don't use corner
+            use_corner = False
+        
+        if use_corner:
             sns.pairplot(df_subset, hue=hue, height=height, corner=True)
-        except (TypeError, AttributeError):
-            # Fallback for older seaborn versions that don't support corner parameter
-            # or if there's an incompatibility with the corner parameter
+        else:
             sns.pairplot(df_subset, hue=hue, height=height)
         
         plt.suptitle('Pairplot of Features', y=1.0)
