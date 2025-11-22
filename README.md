@@ -107,6 +107,13 @@ A collection of data science, machine learning, and AI projects demonstrating va
   - 7 cameras, LiDAR, and radar data from 25 countries
   - Complete data loading utilities and examples
 
+### 📊 Synthetic Data & Datasets
+- **[SYNTH Dataset Project](SYNTH_Dataset_Project/)** - Complete toolkit for PleIAs/SYNTH dataset from HuggingFace
+  - Data loading and exploration utilities
+  - Comprehensive visualization tools
+  - Preprocessing pipelines
+  - Example notebooks and documentation
+
 ### 🎤 Natural Language Processing & Speech
 - **[Speech Recognition - YouTube & VLC](Speech_Recognition_Youtube_and_VLC_Player_project/)** - Voice-controlled media player
 - **[Language Translator](Language_Translator_using_Python_and_GoogleAPI/)** - Real-time translation using Google API
