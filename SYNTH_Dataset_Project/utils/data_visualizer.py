@@ -322,7 +322,12 @@ class DataVisualizer:
             print("⚠ No data to plot")
             return
         
-        sns.pairplot(df_subset, hue=hue, height=height, corner=True)
+        try:
+            sns.pairplot(df_subset, hue=hue, height=height, corner=True)
+        except TypeError:
+            # Fallback for older seaborn versions that don't support corner parameter
+            sns.pairplot(df_subset, hue=hue, height=height)
+        
         plt.suptitle('Pairplot of Features', y=1.0)
         plt.tight_layout()
         plt.show()

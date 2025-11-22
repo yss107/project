@@ -256,12 +256,14 @@ class DataPreprocessor:
         print("=" * 80)
         
         for i, step in enumerate(steps, 1):
-            method_name = step.pop('method')
+            # Create a copy to avoid modifying the original
+            step_copy = step.copy()
+            method_name = step_copy.pop('method')
             print(f"\nStep {i}: {method_name}")
             
             if hasattr(self, method_name):
                 method = getattr(self, method_name)
-                df_processed = method(df_processed, **step)
+                df_processed = method(df_processed, **step_copy)
             else:
                 print(f"⚠ Unknown method: {method_name}")
         

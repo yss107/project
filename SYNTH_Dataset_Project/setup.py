@@ -38,7 +38,6 @@ setup(
         "scikit-learn>=1.0.0",
         "matplotlib>=3.4.0",
         "seaborn>=0.11.0",
-        "plotly>=5.0.0",
         "pyarrow>=6.0.0",
         "tqdm>=4.62.0",
     ],
