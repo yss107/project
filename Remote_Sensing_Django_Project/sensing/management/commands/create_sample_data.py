@@ -93,7 +93,7 @@ class Command(BaseCommand):
                 if (i + 1) % 5 == 0:
                     self.stdout.write(f'  Created {i + 1}/{count} images...')
                     
-            except Exception as e:
+            except (ValueError, TypeError, KeyError) as e:
                 self.stdout.write(
                     self.style.ERROR(f'Error creating image {image_id}: {str(e)}')
                 )

@@ -60,7 +60,9 @@ def load_dataset_sample(split: str = 'train', num_samples: int = 10):
         
         return samples
     except Exception as e:
-        print(f"Error loading dataset sample: {e}")
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error loading dataset sample: {e}")
         return []
 
 
