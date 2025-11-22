@@ -293,9 +293,14 @@ from datasets import load_dataset
 dataset = load_dataset(
     "PleIAs/SYNTH",
     split="train",
-    cache_dir="./cache",
-    trust_remote_code=True
+    cache_dir="./cache"
 )
+
+# Only enable trust_remote_code if you trust the dataset source
+# dataset = load_dataset(
+#     "PleIAs/SYNTH",
+#     trust_remote_code=True  # ⚠️ Security risk - only use with trusted sources
+# )
 ```
 
 ### Batch Processing

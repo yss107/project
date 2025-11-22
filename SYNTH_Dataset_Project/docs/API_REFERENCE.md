@@ -34,7 +34,7 @@ loader = SYNTHLoader(cache_dir='/path/to/cache')
 load_dataset(
     split: Optional[str] = None,
     streaming: bool = False,
-    trust_remote_code: bool = True
+    trust_remote_code: bool = False
 ) -> Union[Dataset, DatasetDict]
 ```
 
@@ -43,7 +43,7 @@ Load the SYNTH dataset from HuggingFace.
 **Parameters:**
 - `split` (str, optional): Specific split to load ('train', 'test', etc.)
 - `streaming` (bool): Whether to stream the dataset
-- `trust_remote_code` (bool): Whether to trust remote code
+- `trust_remote_code` (bool): Whether to trust remote code. **Default is False for security.** Set to True only if you trust the dataset source.
 
 **Returns:**
 - Dataset or DatasetDict: The loaded dataset
