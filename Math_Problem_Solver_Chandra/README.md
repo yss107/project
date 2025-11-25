@@ -151,19 +151,45 @@ PORT=8000
 
 ## 📊 Supported Math Operations
 
-- **Basic Arithmetic**: `+`, `-`, `*`, `/`
+### Basic Operations
+- **Arithmetic**: `+`, `-`, `*`, `/`, `%` (modulo)
 - **Exponents**: `^`, `**`, `squared`, `cubed`
+- **Factorial**: `!` (e.g., `5!` = 120)
 - **Parentheses**: `(`, `)`
-- **Natural Language**: "plus", "minus", "times", "divided by", etc.
+
+### Mathematical Functions
+- **Roots**: `sqrt()`, `cbrt()` (cube root)
+- **Trigonometry**: `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`
+- **Hyperbolic**: `sinh()`, `cosh()`, `tanh()`, `asinh()`, `acosh()`, `atanh()`
+- **Logarithms**: `log()` (base 10), `ln()` (natural), `log2()`
+- **Other**: `abs()`, `ceil()`, `floor()`, `round()`, `exp()`
+
+### Constants
+- `pi` (π = 3.14159...)
+- `e` (Euler's number = 2.71828...)
+- `tau` (τ = 2π)
+
+### Complex Problems
+- **Quadratic Equations**: `ax² + bx + c = 0` (with step-by-step solutions)
+- **Percentages**: `25% of 200`
+- **Ratios**: `ratio 3:4`
 
 ### Example Problems
 
 ```
+# Basic
 2 + 2
 15 * 7 - 23
-What is 144 divided by 12?
-Calculate 25 squared
-(10 + 5) * 3
+5! + 3!
+
+# Functions
+sqrt(144) + 5^2
+sin(pi/2) + cos(0)
+log(100) * ln(e)
+
+# Complex
+x^2 - 5x + 6 = 0
+25% of 200
 ```
 
 ## 🖼️ Screenshots
@@ -174,6 +200,7 @@ The application features a modern, responsive web interface with:
 - Real-time camera preview
 - Beautiful gradient design
 - Mobile-friendly layout
+- Support for complex mathematical expressions
 
 ## 🛠️ Tech Stack
 

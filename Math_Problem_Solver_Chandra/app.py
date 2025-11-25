@@ -2,11 +2,13 @@
 """
 Math Problem Solver using Hugging Face Chandra Model
 Real-time image capture, OCR text extraction, and math problem solving
+Supports complex mathematical expressions including trigonometry, logarithms, and more
 """
 
 import os
 import io
 import re
+import math
 import base64
 from typing import Optional, Dict, Any
 from datetime import datetime
@@ -217,8 +219,13 @@ Solution:"""
             return self._fallback_solve(problem_text)
     
     def _fallback_solve(self, problem_text: str) -> str:
-        """Fallback mathematical expression solver"""
+        """Fallback mathematical expression solver with support for complex problems"""
         try:
+            # First, try to solve complex problems (quadratic, systems, etc.)
+            complex_result = self._solve_complex_problem(problem_text)
+            if complex_result:
+                return complex_result
+            
             # Clean and extract mathematical expression
             expr = self._clean_expression(problem_text)
             
@@ -229,7 +236,15 @@ Solution:"""
             result = self._safe_eval(expr)
             
             if result is not None:
-                return f"Expression: {expr}\nResult: {result}"
+                # Format result nicely
+                if isinstance(result, float):
+                    if result == int(result):
+                        formatted_result = int(result)
+                    else:
+                        formatted_result = round(result, 10)
+                else:
+                    formatted_result = result
+                return f"Expression: {expr}\nResult: {formatted_result}"
             else:
                 return f"Could not evaluate: {expr}"
                 
@@ -238,12 +253,15 @@ Solution:"""
     
     def _clean_expression(self, text: str) -> str:
         """Clean and extract mathematical expression from text"""
-        # Remove common words
-        text = text.lower()
-        text = re.sub(r'\b(what|is|solve|calculate|find|the|answer|to|of|equals?)\b', '', text)
+        # Store original for complex function detection
+        original_text = text.lower().strip()
+        text = original_text
         
-        # Replace common math words with symbols
-        replacements = {
+        # Remove common question words
+        text = re.sub(r'\b(what|is|solve|calculate|find|the|answer|to|of|equals?|value|evaluate)\b', '', text)
+        
+        # Replace common math words with symbols/functions
+        word_replacements = {
             'plus': '+',
             'minus': '-',
             'times': '*',
@@ -253,17 +271,54 @@ Solution:"""
             'squared': '**2',
             'cubed': '**3',
             'power': '**',
-            'x': '*',  # Common multiplication symbol
+            'raised to': '**',
+            'to the power of': '**',
+            'modulo': '%',
+            'mod': '%',
+            'factorial': '!',
         }
         
-        for word, symbol in replacements.items():
+        for word, symbol in word_replacements.items():
             text = text.replace(word, symbol)
         
-        # Convert ^ to ** first
+        # Replace mathematical function words with function names
+        function_replacements = {
+            'square root': 'sqrt',
+            'squareroot': 'sqrt',
+            'sq root': 'sqrt',
+            'cube root': 'cbrt',
+            'cuberoot': 'cbrt',
+            'natural log': 'ln',
+            'natural logarithm': 'ln',
+            'logarithm': 'log',
+            'absolute value': 'abs',
+            'absolute': 'abs',
+            'sine': 'sin',
+            'cosine': 'cos',
+            'tangent': 'tan',
+            'arc sine': 'asin',
+            'arc cosine': 'acos',
+            'arc tangent': 'atan',
+            'hyperbolic sine': 'sinh',
+            'hyperbolic cosine': 'cosh',
+            'hyperbolic tangent': 'tanh',
+            'ceiling': 'ceil',
+            'floor': 'floor',
+            'round': 'round',
+        }
+        
+        for word, func in function_replacements.items():
+            text = text.replace(word, func)
+        
+        # Convert ^ to ** 
         text = text.replace('^', '**')
         
-        # Keep only valid math characters (including ** for exponentiation)
-        text = re.sub(r'[^0-9+\-*/().\s*]', '', text)
+        # Replace 'x' between numbers as multiplication (but not in function names)
+        text = re.sub(r'(\d)\s*x\s*(\d)', r'\1*\2', text)
+        
+        # Keep valid math characters including function names
+        # Allow: digits, operators, parentheses, dots, spaces, and letters for function names
+        text = re.sub(r'[^0-9+\-*/().%!\s*a-z]', '', text)
         
         # Clean up spaces
         text = ' '.join(text.split())
@@ -271,14 +326,90 @@ Solution:"""
         return text.strip()
     
     def _safe_eval(self, expr: str) -> Optional[float]:
-        """Safely evaluate a mathematical expression"""
+        """Safely evaluate a mathematical expression with support for complex math functions"""
         try:
-            # Only allow safe characters (digits, operators, parentheses, dots, spaces)
-            if not re.match(r'^[0-9+\-*/().\s*]+$', expr):
+            # Validate expression - allow alphanumeric, operators, parentheses, dots, spaces
+            if not re.match(r'^[0-9+\-*/().%!\s*a-zA-Z_]+$', expr):
                 return None
             
-            # Use Python's eval with restricted globals
+            # Handle factorial notation (n!)
+            def factorial_replace(match):
+                num = int(match.group(1))
+                return str(math.factorial(num))
+            
+            expr = re.sub(r'(\d+)!', factorial_replace, expr)
+            
+            # Define safe mathematical functions
+            safe_functions = {
+                # Basic math
+                'abs': abs,
+                'round': round,
+                'min': min,
+                'max': max,
+                'sum': sum,
+                
+                # Powers and roots
+                'sqrt': math.sqrt,
+                'cbrt': lambda x: x ** (1/3) if x >= 0 else -((-x) ** (1/3)),
+                'pow': pow,
+                'exp': math.exp,
+                
+                # Logarithms
+                'log': math.log10,
+                'log10': math.log10,
+                'log2': math.log2,
+                'ln': math.log,
+                
+                # Trigonometric functions (radians)
+                'sin': math.sin,
+                'cos': math.cos,
+                'tan': math.tan,
+                'asin': math.asin,
+                'acos': math.acos,
+                'atan': math.atan,
+                'atan2': math.atan2,
+                
+                # Hyperbolic functions
+                'sinh': math.sinh,
+                'cosh': math.cosh,
+                'tanh': math.tanh,
+                'asinh': math.asinh,
+                'acosh': math.acosh,
+                'atanh': math.atanh,
+                
+                # Rounding
+                'ceil': math.ceil,
+                'floor': math.floor,
+                'trunc': math.trunc,
+                
+                # Trigonometric with degrees
+                'sind': lambda x: math.sin(math.radians(x)),
+                'cosd': lambda x: math.cos(math.radians(x)),
+                'tand': lambda x: math.tan(math.radians(x)),
+                
+                # Conversion
+                'radians': math.radians,
+                'degrees': math.degrees,
+                
+                # Other
+                'factorial': math.factorial,
+                'gcd': math.gcd,
+                'lcm': lambda a, b: abs(a * b) // math.gcd(a, b) if a and b else 0,
+            }
+            
+            # Define safe constants
+            safe_constants = {
+                'pi': math.pi,
+                'e': math.e,
+                'tau': math.tau,
+                'inf': math.inf,
+            }
+            
+            # Create restricted namespace
             allowed_names = {"__builtins__": {}}
+            allowed_names.update(safe_functions)
+            allowed_names.update(safe_constants)
+            
             result = eval(expr, allowed_names, {})
             
             if isinstance(result, (int, float, complex)):
@@ -287,6 +418,137 @@ Solution:"""
             
         except Exception:
             return None
+    
+    def _solve_complex_problem(self, problem_text: str) -> str:
+        """Solve complex mathematical problems with step-by-step solutions"""
+        problem_text = problem_text.lower().strip()
+        
+        # Check for specific problem types
+        
+        # Quadratic equation: ax² + bx + c = 0
+        quadratic_match = re.search(r'(\-?\d*)\s*x\s*[\^²2]+\s*([+\-])\s*(\d*)\s*x\s*([+\-])\s*(\d+)\s*=\s*0', problem_text)
+        if quadratic_match:
+            return self._solve_quadratic(quadratic_match)
+        
+        # System of equations detection
+        if 'system' in problem_text or ('equation' in problem_text and 'and' in problem_text):
+            return self._solve_system_hint(problem_text)
+        
+        # Derivative/calculus hints
+        if 'derivative' in problem_text or 'differentiate' in problem_text:
+            return self._calculus_hint(problem_text, 'derivative')
+        
+        if 'integral' in problem_text or 'integrate' in problem_text:
+            return self._calculus_hint(problem_text, 'integral')
+        
+        # Percentage problems
+        percent_match = re.search(r'(\d+(?:\.\d+)?)\s*%\s*(?:of)\s*(\d+(?:\.\d+)?)', problem_text)
+        if percent_match:
+            percent = float(percent_match.group(1))
+            value = float(percent_match.group(2))
+            result = (percent / 100) * value
+            return f"Calculation: {percent}% of {value}\nFormula: ({percent}/100) × {value}\nResult: {result}"
+        
+        # Ratio problems
+        ratio_match = re.search(r'ratio.*?(\d+)\s*(?::|to)\s*(\d+)', problem_text)
+        if ratio_match:
+            a, b = int(ratio_match.group(1)), int(ratio_match.group(2))
+            gcd = math.gcd(a, b)
+            return f"Ratio: {a}:{b}\nSimplified: {a//gcd}:{b//gcd}\nAs fraction: {a}/{b} = {a/b:.4f}"
+        
+        # Fall back to expression evaluation
+        return None
+    
+    def _solve_quadratic(self, match) -> str:
+        """Solve quadratic equation ax² + bx + c = 0"""
+        a_str = match.group(1) or '1'
+        a = int(a_str) if a_str not in ['', '-'] else (1 if a_str == '' else -1)
+        
+        sign1 = match.group(2)
+        b_str = match.group(3) or '1'
+        b = int(b_str) if b_str else 1
+        b = b if sign1 == '+' else -b
+        
+        sign2 = match.group(4)
+        c = int(match.group(5))
+        c = c if sign2 == '+' else -c
+        
+        discriminant = b**2 - 4*a*c
+        
+        solution = f"Quadratic Equation: {a}x² + {b}x + {c} = 0\n\n"
+        solution += f"Step 1: Identify coefficients\n  a = {a}, b = {b}, c = {c}\n\n"
+        solution += f"Step 2: Calculate discriminant (Δ = b² - 4ac)\n  Δ = {b}² - 4({a})({c}) = {discriminant}\n\n"
+        
+        if discriminant > 0:
+            x1 = (-b + math.sqrt(discriminant)) / (2*a)
+            x2 = (-b - math.sqrt(discriminant)) / (2*a)
+            solution += f"Step 3: Two real roots (Δ > 0)\n"
+            solution += f"  x₁ = (-b + √Δ) / 2a = {x1:.4f}\n"
+            solution += f"  x₂ = (-b - √Δ) / 2a = {x2:.4f}"
+        elif discriminant == 0:
+            x = -b / (2*a)
+            solution += f"Step 3: One real root (Δ = 0)\n"
+            solution += f"  x = -b / 2a = {x:.4f}"
+        else:
+            real = -b / (2*a)
+            imag = math.sqrt(-discriminant) / (2*a)
+            solution += f"Step 3: Two complex roots (Δ < 0)\n"
+            solution += f"  x₁ = {real:.4f} + {imag:.4f}i\n"
+            solution += f"  x₂ = {real:.4f} - {imag:.4f}i"
+        
+        return solution
+    
+    def _solve_system_hint(self, problem_text: str) -> str:
+        """Provide hints for solving system of equations"""
+        return """System of Equations Solver:
+
+Methods available:
+1. Substitution Method: Solve one equation for a variable, substitute into the other
+2. Elimination Method: Add/subtract equations to eliminate a variable
+3. Matrix Method: Use Cramer's rule or matrix inversion
+
+Example: 
+  2x + 3y = 7
+  x - y = 1
+
+Using substitution: x = y + 1
+  2(y+1) + 3y = 7
+  5y + 2 = 7
+  y = 1, x = 2
+
+Please provide the specific equations for a complete solution."""
+    
+    def _calculus_hint(self, problem_text: str, calc_type: str) -> str:
+        """Provide calculus hints and rules"""
+        if calc_type == 'derivative':
+            return """Derivative Rules:
+
+1. Power Rule: d/dx(xⁿ) = nxⁿ⁻¹
+2. Product Rule: d/dx(fg) = f'g + fg'
+3. Quotient Rule: d/dx(f/g) = (f'g - fg')/g²
+4. Chain Rule: d/dx(f(g(x))) = f'(g(x)) · g'(x)
+
+Common Derivatives:
+• d/dx(sin x) = cos x
+• d/dx(cos x) = -sin x
+• d/dx(eˣ) = eˣ
+• d/dx(ln x) = 1/x
+
+Please provide the specific function for a complete derivative."""
+        else:
+            return """Integration Rules:
+
+1. Power Rule: ∫xⁿ dx = xⁿ⁺¹/(n+1) + C
+2. Sum Rule: ∫(f + g) dx = ∫f dx + ∫g dx
+3. Constant Multiple: ∫cf dx = c∫f dx
+
+Common Integrals:
+• ∫sin x dx = -cos x + C
+• ∫cos x dx = sin x + C
+• ∫eˣ dx = eˣ + C
+• ∫1/x dx = ln|x| + C
+
+Please provide the specific function for a complete integral."""
     
     def process_image(self, image: Image.Image) -> Dict[str, Any]:
         """Process image: extract text and solve math problem"""
@@ -694,7 +956,7 @@ async def root():
             <div id="textTab" class="tab-content">
                 <div class="section">
                     <h2>✏️ Type Math Problem</h2>
-                    <textarea id="problemText" placeholder="Enter your math problem here...&#10;Examples:&#10;- 2 + 2&#10;- 15 * 7 - 23&#10;- What is 144 divided by 12?&#10;- Calculate 25 squared"></textarea>
+                    <textarea id="problemText" placeholder="Enter your math problem here...&#10;&#10;Basic: 15 * 7 - 23&#10;Functions: sqrt(144) + sin(pi/2)&#10;Powers: 2^10 or 25 squared&#10;Quadratic: x² - 5x + 6 = 0&#10;Percentage: 25% of 200&#10;Factorial: 5! + 3!"></textarea>
                     <button class="button" onclick="solveTextProblem()">🧮 Solve Problem</button>
                 </div>
             </div>
@@ -723,11 +985,22 @@ async def root():
             
             <!-- Info Box -->
             <div class="info-box">
-                <p><strong>📌 Tips for best results:</strong></p>
-                <p>• Write math problems clearly with good lighting</p>
-                <p>• Use clear handwriting or printed text</p>
-                <p>• Keep the camera steady while capturing</p>
-                <p>• Supported operations: +, -, *, /, ^, parentheses</p>
+                <p><strong>📌 Supported Features:</strong></p>
+                <p>• <strong>Basic:</strong> +, -, *, /, ^, parentheses, %, factorial (!)</p>
+                <p>• <strong>Functions:</strong> sqrt, sin, cos, tan, log, ln, exp, abs</p>
+                <p>• <strong>Constants:</strong> pi, e, tau</p>
+                <p>• <strong>Advanced:</strong> sinh, cosh, tanh, asin, acos, atan, ceil, floor</p>
+                <p>• <strong>Complex:</strong> Quadratic equations (ax² + bx + c = 0), percentages, ratios</p>
+            </div>
+            
+            <div class="info-box" style="background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%); border-left-color: #38a169;">
+                <p><strong>📝 Example Problems:</strong></p>
+                <p>• sqrt(144) + 5^2 → Square root and exponent</p>
+                <p>• sin(pi/2) + cos(0) → Trigonometry</p>
+                <p>• log(100) * ln(e) → Logarithms</p>
+                <p>• 2x² - 5x + 2 = 0 → Quadratic equation</p>
+                <p>• 25% of 200 → Percentage</p>
+                <p>• 5! + 3! → Factorials (120 + 6 = 126)</p>
             </div>
         </div>
         
