@@ -10,6 +10,7 @@ import re
 import base64
 from typing import Optional, Dict, Any
 from datetime import datetime
+from contextlib import asynccontextmanager
 
 import numpy as np
 from PIL import Image
@@ -258,9 +259,11 @@ Solution:"""
         for word, symbol in replacements.items():
             text = text.replace(word, symbol)
         
-        # Keep only valid math characters
-        text = re.sub(r'[^0-9+\-*/().^**\s]', '', text)
-        text = text.replace('^', '**')  # Convert ^ to **
+        # Convert ^ to ** first
+        text = text.replace('^', '**')
+        
+        # Keep only valid math characters (including ** for exponentiation)
+        text = re.sub(r'[^0-9+\-*/().\s*]', '', text)
         
         # Clean up spaces
         text = ' '.join(text.split())
@@ -270,8 +273,8 @@ Solution:"""
     def _safe_eval(self, expr: str) -> Optional[float]:
         """Safely evaluate a mathematical expression"""
         try:
-            # Only allow safe characters
-            if not re.match(r'^[0-9+\-*/().** ]+$', expr):
+            # Only allow safe characters (digits, operators, parentheses, dots, spaces)
+            if not re.match(r'^[0-9+\-*/().\s*]+$', expr):
                 return None
             
             # Use Python's eval with restricted globals
@@ -310,37 +313,44 @@ Solution:"""
 # FastAPI Application
 # ============================================================================
 
+# Global solver instance
+solver: Optional[MathProblemSolver] = None
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifespan context manager for startup and shutdown events"""
+    global solver
+    # Startup
+    print("🚀 Initializing Math Problem Solver...")
+    solver = MathProblemSolver()
+    print("✅ API ready!")
+    yield
+    # Shutdown
+    print("👋 Shutting down...")
+
+
 app = FastAPI(
     title="Math Problem Solver API",
     description="Real-time math problem solver using Hugging Face Chandra model with OCR",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
-# CORS middleware
+# CORS middleware - configure allowed origins from environment for production
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Global solver instance
-solver: Optional[MathProblemSolver] = None
-
 
 # ============================================================================
 # API Endpoints
 # ============================================================================
-
-@app.on_event("startup")
-async def startup_event():
-    """Initialize the solver on startup"""
-    global solver
-    print("🚀 Initializing Math Problem Solver...")
-    solver = MathProblemSolver()
-    print("✅ API ready!")
-
 
 @app.get("/", response_class=HTMLResponse)
 async def root():

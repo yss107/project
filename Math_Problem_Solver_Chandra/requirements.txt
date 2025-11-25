@@ -7,7 +7,6 @@ accelerate>=0.24.0
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 python-multipart>=0.0.6
-websockets>=12.0
 
 # Image Processing and OCR
 opencv-python>=4.8.0
