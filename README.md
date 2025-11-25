@@ -114,6 +114,12 @@ A collection of data science, machine learning, and AI projects demonstrating va
   - Preprocessing pipelines
   - Example notebooks and documentation
 
+### 🧮 AI-Powered Math & Education
+- **[Math Problem Solver - Chandra](Math_Problem_Solver_Chandra/)** - Real-time math problem solver using Hugging Face Chandra model
+  - Real-time camera capture with OCR text extraction
+  - AI-powered mathematical problem solving
+  - Interactive web interface with multiple input methods
+
 ### 🎤 Natural Language Processing & Speech
 - **[Speech Recognition - YouTube & VLC](Speech_Recognition_Youtube_and_VLC_Player_project/)** - Voice-controlled media player
 - **[Language Translator](Language_Translator_using_Python_and_GoogleAPI/)** - Real-time translation using Google API
