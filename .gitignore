@@ -77,3 +77,11 @@ Remote_Sensing_Django_Project/db.sqlite3
 Remote_Sensing_Django_Project/staticfiles/
 Remote_Sensing_Django_Project/media/
 Remote_Sensing_Django_Project/.env
+
+# Math Problem Solver project files
+Math_Problem_Solver_Chandra/.env
+Math_Problem_Solver_Chandra/__pycache__/
+Math_Problem_Solver_Chandra/*.png
+Math_Problem_Solver_Chandra/*.jpg
+Math_Problem_Solver_Chandra/*.jpeg
+Math_Problem_Solver_Chandra/uploads/
