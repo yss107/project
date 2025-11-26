@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from PIL import Image
 import io
@@ -15,7 +14,6 @@ def index(request):
     return render(request, 'solver/index.html')
 
 
-@csrf_exempt
 @require_http_methods(["GET"])
 def health_check(request):
     """Health check endpoint"""
@@ -29,7 +27,6 @@ def health_check(request):
     })
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def solve_problem(request):
     """Solve a math problem from text"""
@@ -58,7 +55,6 @@ def solve_problem(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def process_image(request):
     """Process an image: extract text and solve math problem"""
