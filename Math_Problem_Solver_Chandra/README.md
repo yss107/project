@@ -1,6 +1,6 @@
-# 🧮 Math Problem Solver with Real-time OCR
+# 🧮 Math Problem Solver with Real-time OCR (Django)
 
-A web-based math problem solver that uses the [Hugging Face Chandra Model](https://huggingface.co/datalab-to/chandra) for solving mathematical problems. Features real-time camera capture, OCR text extraction, and AI-powered problem solving.
+A Django-powered web-based math problem solver that uses the [Hugging Face Chandra Model](https://huggingface.co/datalab-to/chandra) for solving mathematical problems. Features real-time camera capture, OCR text extraction, and AI-powered problem solving.
 
 ## ✨ Features
 
@@ -9,9 +9,10 @@ A web-based math problem solver that uses the [Hugging Face Chandra Model](https
 - **✏️ Text Input**: Type math problems directly
 - **🔍 OCR Text Extraction**: Automatic text extraction using EasyOCR or Tesseract
 - **🤖 AI-Powered Solutions**: Uses the Hugging Face Chandra model for solving problems
-- **🌐 Web Interface**: Beautiful, responsive web UI
+- **🌐 Web Interface**: Beautiful, responsive Django web UI with modern design
 - **📱 Mobile Friendly**: Works on desktop and mobile devices
 - **⚡ Real-time Processing**: Fast, real-time problem solving
+- **🔒 Secure**: Django-powered backend with CSRF protection
 
 ## 🏗️ Architecture
 
@@ -29,7 +30,7 @@ A web-based math problem solver that uses the [Hugging Face Chandra Model](https
                       │ HTTP/REST
                       ▼
 ┌──────────────────────────────────────────────────────┐
-│                  FastAPI Server                       │
+│                  Django Server                        │
 │  ┌─────────────────────────────────────────────────┐ │
 │  │              Math Problem Solver                 │ │
 │  │  ┌───────────┐     ┌───────────────────────┐   │ │
@@ -89,11 +90,24 @@ A web-based math problem solver that uses the [Hugging Face Chandra Model](https
 
 ### Running the Application
 
+**Django Development Server:**
+
+1. **Run migrations** (first time only):
+   ```bash
+   python manage.py migrate
+   ```
+
+2. **Start the server**:
+   ```bash
+   python manage.py runserver 0.0.0.0:8000
+   ```
+
+The server will start at `http://localhost:8000`
+
+**Legacy FastAPI Server** (deprecated):
 ```bash
 python app.py
 ```
-
-The server will start at `http://localhost:8000`
 
 ### Using the Web Interface
 
@@ -111,23 +125,22 @@ The server will start at `http://localhost:8000`
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/` | GET | Web interface |
-| `/health` | GET | Health check |
-| `/solve` | POST | Solve text-based math problem |
-| `/process-image` | POST | Process image and solve math problem |
-| `/docs` | GET | Interactive API documentation (Swagger) |
+| `/health/` | GET | Health check |
+| `/solve/` | POST | Solve text-based math problem |
+| `/process-image/` | POST | Process image and solve math problem |
 
 ### Examples
 
 **Solve a text problem**:
 ```bash
-curl -X POST "http://localhost:8000/solve" \
+curl -X POST "http://localhost:8000/solve/" \
   -H "Content-Type: application/json" \
   -d '{"problem_text": "What is 25 * 4 + 10?"}'
 ```
 
 **Process an image**:
 ```bash
-curl -X POST "http://localhost:8000/process-image" \
+curl -X POST "http://localhost:8000/process-image/" \
   -F "file=@math_problem.png"
 ```
 
@@ -195,26 +208,50 @@ x^2 - 5x + 6 = 0
 ## 🖼️ Screenshots
 
 ### Web Interface
-The application features a modern, responsive web interface with:
+The Django-powered application features a modern, responsive web interface with:
 - Tab-based navigation (Camera, Upload, Text)
 - Real-time camera preview
-- Beautiful gradient design
+- Beautiful gradient design with Django badge
 - Mobile-friendly layout
 - Support for complex mathematical expressions
+- CSRF protection for secure form submissions
+
+![Math Problem Solver Interface](https://github.com/user-attachments/assets/60a113bd-70c9-4a33-9b23-a6cf06557bdb)
+
+### Working Example
+![Math Problem Solver Working](https://github.com/user-attachments/assets/264fbd6d-f10e-46a4-a94a-6d931b19206f)
 
 ## 🛠️ Tech Stack
 
-- **Backend**: FastAPI, Python 3.8+
+- **Backend**: Django 5.0+, Python 3.8+
 - **ML/AI**: Hugging Face Transformers, PyTorch
 - **OCR**: EasyOCR, Tesseract
 - **Frontend**: HTML5, CSS3, JavaScript
 - **Camera**: WebRTC (getUserMedia API)
+- **Database**: SQLite (Django default)
 
 ## 📝 Project Structure
 
 ```
 Math_Problem_Solver_Chandra/
-├── app.py              # Main FastAPI application
+├── manage.py                      # Django management script
+├── math_solver_project/           # Django project settings
+│   ├── __init__.py
+│   ├── settings.py               # Django settings
+│   ├── urls.py                   # Project URL configuration
+│   ├── wsgi.py                   # WSGI config
+│   └── asgi.py                   # ASGI config
+├── solver/                        # Django app
+│   ├── __init__.py
+│   ├── views.py                  # View functions
+│   ├── urls.py                   # App URL configuration
+│   ├── math_solver.py            # Core math solver logic
+│   ├── models.py                 # Django models
+│   ├── admin.py                  # Django admin
+│   └── templates/
+│       └── solver/
+│           └── index.html        # Main web interface
+├── app.py                        # Legacy FastAPI application (deprecated)
 ├── requirements.txt    # Python dependencies
 ├── README.md           # This file
 ├── .env.example        # Environment variables example

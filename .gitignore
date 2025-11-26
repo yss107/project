@@ -85,3 +85,6 @@ Math_Problem_Solver_Chandra/*.png
 Math_Problem_Solver_Chandra/*.jpg
 Math_Problem_Solver_Chandra/*.jpeg
 Math_Problem_Solver_Chandra/uploads/
+Math_Problem_Solver_Chandra/db.sqlite3
+Math_Problem_Solver_Chandra/staticfiles/
+Math_Problem_Solver_Chandra/media/
