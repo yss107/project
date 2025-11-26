@@ -1,12 +1,10 @@
+# Django Web Framework
+django>=5.0.0
+
 # Core ML libraries
 torch>=2.0.0
 transformers>=4.35.0
 accelerate>=0.24.0
-
-# Web API and Server
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0
-python-multipart>=0.0.6
 
 # Image Processing and OCR
 opencv-python>=4.8.0
@@ -16,7 +14,6 @@ pytesseract>=0.3.10
 
 # Utilities
 numpy>=1.24.0
-pydantic>=2.0.0
 python-dotenv>=1.0.0
 requests>=2.31.0
 
