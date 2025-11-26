@@ -148,19 +148,43 @@ curl -X POST "http://localhost:8000/process-image/" \
 
 ### Environment Variables
 
+#### Django Settings
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DJANGO_SECRET_KEY` | Auto-generated | Secret key for Django (change in production!) |
+| `DJANGO_DEBUG` | `True` | Debug mode (set to `False` in production) |
+| `DJANGO_ALLOWED_HOSTS` | `localhost,127.0.0.1` | Comma-separated allowed hosts |
+
+#### Application Settings
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `MODEL_ID` | `datalab-to/chandra` | Hugging Face model ID |
-| `HOST` | `0.0.0.0` | Server host |
-| `PORT` | `8000` | Server port |
+| `HOST` | `0.0.0.0` | Server host (legacy FastAPI) |
+| `PORT` | `8000` | Server port (legacy FastAPI) |
 
 ### Example `.env` file
 
 ```env
+# Django Configuration
+DJANGO_SECRET_KEY=your-secret-key-here-change-in-production
+DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Application Settings
 MODEL_ID=datalab-to/chandra
-HOST=0.0.0.0
-PORT=8000
 ```
+
+### Production Deployment
+
+For production deployment, ensure you:
+1. Generate a strong `DJANGO_SECRET_KEY`
+2. Set `DJANGO_DEBUG=False`
+3. Configure `DJANGO_ALLOWED_HOSTS` with your domain
+4. Use a production-grade server (Gunicorn, uWSGI)
+5. Enable HTTPS and configure security headers
+6. Use a production database (PostgreSQL, MySQL)
+
+See `DJANGO_MIGRATION.md` for more deployment information.
 
 ## 📊 Supported Math Operations
 
