@@ -6,12 +6,19 @@ A Django web application for working with the **Major-TOM/Core-AlphaEarth-Embedd
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![HuggingFace](https://img.shields.io/badge/HuggingFace-Datasets-yellow)
 
+## 📸 Screenshot
+
+![Home Page Screenshot](https://github.com/user-attachments/assets/a956238a-7570-4f89-8f34-642cbead112f)
+
+*Advanced home page featuring dashboard overview, quick search, interactive map preview, quick actions, and comprehensive feature cards*
+
 ## 📋 Overview
 
 This project provides a comprehensive web interface for managing and analyzing satellite imagery data from the Major-TOM/Core-AlphaEarth-Embeddings dataset. It combines Django's powerful web framework with HuggingFace's datasets library to create a seamless platform for remote sensing applications.
 
 ## ✨ Features
 
+### Core Features
 - 🌍 **HuggingFace Dataset Integration** - Direct integration with Major-TOM/Core-AlphaEarth-Embeddings dataset
 - 📊 **Data Management** - Store and organize satellite imagery metadata with rich filtering options
 - 🔍 **Advanced Search** - Filter images by dataset split, grid cell, timestamp, and more
@@ -19,6 +26,15 @@ This project provides a comprehensive web interface for managing and analyzing s
 - 🎨 **Modern UI** - Responsive design built with Bootstrap 5 and Font Awesome icons
 - 🔐 **Admin Interface** - Full-featured Django admin panel for data management
 - 📱 **Mobile-Friendly** - Fully responsive design that works on all devices
+
+### Advanced Features (New!)
+- 🔎 **Quick Search** - Instantly search satellite images by grid cell from the home page
+- 🗺️ **Interactive Map Preview** - Visual representation of global satellite coverage
+- 📊 **Dashboard Overview** - Real-time statistics including image count, analyses, and embedding dimensions
+- ⚡ **Quick Actions Panel** - One-click access to common tasks (Browse Images, Training Data, Dataset Info, Admin)
+- 📋 **Dataset Overview Section** - Comprehensive information about available data splits (Train/Validation/Test)
+- 🏷️ **Technology Stack Display** - Visual showcase of the technologies powering the application
+- 🎯 **Enhanced Feature Cards** - Detailed feature descriptions with capability lists
 
 ## 🚀 Quick Start
 
