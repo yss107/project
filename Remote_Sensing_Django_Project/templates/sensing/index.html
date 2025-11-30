@@ -34,8 +34,14 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="30" r="2" fill="%23667eea" opacity="0.5"/><circle cx="50" cy="20" r="1.5" fill="%23764ba2" opacity="0.6"/><circle cx="80" cy="40" r="2.5" fill="%23667eea" opacity="0.4"/><circle cx="30" cy="60" r="1" fill="%23764ba2" opacity="0.7"/><circle cx="70" cy="70" r="2" fill="%23667eea" opacity="0.5"/><circle cx="45" cy="80" r="1.5" fill="%23764ba2" opacity="0.6"/></svg>');
-        opacity: 0.3;
+        background: 
+            radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.3) 0%, transparent 8%),
+            radial-gradient(circle at 50% 20%, rgba(118, 75, 162, 0.4) 0%, transparent 6%),
+            radial-gradient(circle at 80% 40%, rgba(102, 126, 234, 0.2) 0%, transparent 10%),
+            radial-gradient(circle at 30% 60%, rgba(118, 75, 162, 0.5) 0%, transparent 4%),
+            radial-gradient(circle at 70% 70%, rgba(102, 126, 234, 0.3) 0%, transparent 8%),
+            radial-gradient(circle at 45% 80%, rgba(118, 75, 162, 0.4) 0%, transparent 6%);
+        opacity: 0.8;
     }
     .map-preview-content {
         position: relative;
@@ -234,7 +240,7 @@
             </div>
         </div>
         <div class="col-lg-3 col-md-6 mb-4">
-            <div class="stat-card text-center" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="stat-card text-center bg-gradient-warning">
                 <i class="fas fa-vector-square fa-3x mb-3"></i>
                 <h2>768</h2>
                 <p class="mb-0">Embedding Dims</p>
@@ -369,7 +375,7 @@
                             <i class="fas fa-external-link-alt"></i> View Dataset Details
                         </a>
                         <a href="https://huggingface.co/datasets/Major-TOM/Core-AlphaEarth-Embeddings" target="_blank" class="btn btn-outline-dark">
-                            <i class="fab fa-github"></i> HuggingFace
+                            <i class="fas fa-external-link-alt"></i> HuggingFace
                         </a>
                     </div>
                     <div class="col-md-4 text-center">
