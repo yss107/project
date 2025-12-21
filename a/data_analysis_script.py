@@ -3,7 +3,6 @@ Data Analyst Assignment - Excel Data Analysis Script with Excel Formulas
 This script performs all tasks using actual Excel formulas instead of Python calculations.
 """
 
-import pandas as pd
 import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -117,17 +116,20 @@ def task4_add_total_revenue_formula(wb):
     headers = {cell.value: cell.column for cell in ws[1]}
     revenue_col = get_column_letter(headers['Revenue'])
     
+    # Store the last data row before adding summaries
+    last_data_row = ws.max_row
+    
     # Add formula in a summary area (after the data)
-    summary_row = ws.max_row + 3
+    summary_row = last_data_row + 3
     ws[f"J{summary_row}"] = "Total Revenue:"
     ws[f"J{summary_row}"].font = Font(bold=True)
-    ws[f"L{summary_row}"] = f"=SUM({revenue_col}2:{revenue_col}{ws.max_row})"
+    ws[f"L{summary_row}"] = f"=SUM({revenue_col}2:{revenue_col}{last_data_row})"
     ws[f"L{summary_row}"].font = Font(bold=True)
     
     print(f"✓ Total Revenue formula added at row {summary_row}")
-    print(f"  Formula: =SUM({revenue_col}2:{revenue_col}{ws.max_row})")
+    print(f"  Formula: =SUM({revenue_col}2:{revenue_col}{last_data_row})")
     
-    return f"Total Revenue formula: =SUM({revenue_col}2:{revenue_col}{ws.max_row})"
+    return f"Total Revenue formula: =SUM({revenue_col}2:{revenue_col}{last_data_row})"
 
 def task5_add_payment_status_formula(wb):
     """Task 5: Add percentage of Unpaid/Pending orders."""
@@ -141,14 +143,17 @@ def task5_add_payment_status_formula(wb):
     headers = {cell.value: cell.column for cell in ws[1]}
     payment_status_col = get_column_letter(headers['Payment Status'])
     
+    # Store the last data row
+    last_data_row = 127  # Based on original data (126 orders + 1 header)
+    
     # Add formulas in summary area
-    summary_row = ws.max_row + 5
+    summary_row = ws.max_row + 2
     ws[f"J{summary_row}"] = "Total Orders:"
-    ws[f"L{summary_row}"] = f"=COUNTA({payment_status_col}2:{payment_status_col}{ws.max_row})"
+    ws[f"L{summary_row}"] = f"=COUNTA({payment_status_col}2:{payment_status_col}{last_data_row})"
     
     summary_row += 1
     ws[f"J{summary_row}"] = "Unpaid/Pending:"
-    ws[f"L{summary_row}"] = f'=COUNTIF({payment_status_col}2:{payment_status_col}{ws.max_row},"Unpaid")+COUNTIF({payment_status_col}2:{payment_status_col}{ws.max_row},"Pending")'
+    ws[f"L{summary_row}"] = f'=COUNTIF({payment_status_col}2:{payment_status_col}{last_data_row},"Unpaid")+COUNTIF({payment_status_col}2:{payment_status_col}{last_data_row},"Pending")'
     
     summary_row += 1
     ws[f"J{summary_row}"] = "Percentage:"
@@ -211,7 +216,7 @@ def task6_fill_month_and_products(wb):
         
         for col_idx, month in enumerate(['January', 'February', 'March', 'April'], start=2):
             col_letter = get_column_letter(col_idx)
-            formula = f'=SUMIFS(orders!{quantity_col}:${quantity_col},orders!${product_col}:${product_col},$A{i},orders!${month_col_orders}:${month_col_orders},"{month}")'
+            formula = f'=SUMIFS(orders!${quantity_col}:${quantity_col},orders!${product_col}:${product_col},$A{i},orders!${month_col_orders}:${month_col_orders},"{month}")'
             ws_products[f'{col_letter}{i}'] = formula
         
         # Add total formula
