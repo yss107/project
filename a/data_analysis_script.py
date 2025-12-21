@@ -65,6 +65,9 @@ def task2_calculate_revenue(df):
     
     # Convert Unit Price to numeric (it's stored as object)
     df['Unit Price'] = pd.to_numeric(df['Unit Price'], errors='coerce')
+    null_prices = df['Unit Price'].isnull().sum()
+    if null_prices > 0:
+        print(f"⚠ Warning: {null_prices} rows had invalid Unit Price values (converted to NaN)")
     
     # Convert Discount % to decimal (5% = 0.05)
     df['Discount_Decimal'] = df['Discount %'] / 100
@@ -78,6 +81,9 @@ def task2_calculate_revenue(df):
         df['Quantity'] * df['Unit Price'] * (1 - df['Discount_Decimal']),
         np.nan
     )
+    
+    # Clean up temporary column
+    df = df.drop(columns=['Discount_Decimal'])
     
     print(f"✓ Revenue calculated for all {len(df)} orders")
     print(f"✓ Net Revenue calculated for {df['Payment Status'].eq('Paid').sum()} paid orders")
@@ -142,7 +148,10 @@ def task6_month_and_products_sold(df):
     
     # Convert Order Date to datetime if needed
     if df['Order Date'].dtype == 'object':
-        df['Order Date'] = pd.to_datetime(df['Order Date'])
+        df['Order Date'] = pd.to_datetime(df['Order Date'], errors='coerce')
+        null_dates = df['Order Date'].isnull().sum()
+        if null_dates > 0:
+            print(f"⚠ Warning: {null_dates} rows had invalid Order Date values (converted to NaT)")
     
     # Extract month name
     df['Month'] = df['Order Date'].dt.strftime('%B')
@@ -266,10 +275,6 @@ def save_results(df_orders, df_questions, products_sold_pivot, anomalies, pivot,
     ]
     
     df_questions['Answers'] = answers
-    
-    # Remove the temporary Discount_Decimal column before saving
-    if 'Discount_Decimal' in df_orders.columns:
-        df_orders = df_orders.drop(columns=['Discount_Decimal'])
     
     # Write to Excel
     with pd.ExcelWriter(OUTPUT_FILE, engine='openpyxl') as writer:
