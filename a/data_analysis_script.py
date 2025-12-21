@@ -30,10 +30,10 @@ def task1_identify_anomalies(wb):
     
     anomalies = []
     
-    # Anomaly 1: Duplicate rows (manually identified - O080 at rows 81 & 93, O100 at rows 46 & 102)
+    # Anomaly 1: Duplicate rows (manually identified - O080 at rows 82 & 94, O100 at rows 47 & 103)
     anomalies.append(
-        "1. Duplicate Rows: There are 2 duplicate rows in the dataset (Order O080 appears in rows 81 & 93, "
-        "Order O100 appears in rows 46 & 102). This affects analysis by inflating counts and revenue calculations. "
+        "1. Duplicate Rows: There are 2 duplicate rows in the dataset (Order O080 appears in rows 82 & 94, "
+        "Order O100 appears in rows 47 & 103). This affects analysis by inflating counts and revenue calculations. "
         "IMPORTANT: The Excel formulas include ALL rows. For accurate pivot analysis, duplicates should be removed first. "
         "With duplicates: West=₹1,858,965, East=₹1,104,235. Without duplicates: West=₹1,836,405, East=₹1,089,985."
     )
@@ -109,7 +109,7 @@ def task2_fill_revenue_formulas(wb):
             ws[f"{note_col}{row}"] = "DUPLICATE"
             ws[f"{note_col}{row}"].font = Font(color="FF0000", bold=True)
         
-        print(f"\n⚠ WARNING: Marked {len(set(duplicate_rows))} duplicate rows in column {note_col}")
+        print(f"\n⚠ WARNING: Marked {len(duplicate_rows)} duplicate rows in column {note_col}")
     
     print(f"✓ Revenue formulas added for {ws.max_row - 1} orders")
     print(f"✓ Net Revenue formulas added for {ws.max_row - 1} orders")
