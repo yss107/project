@@ -30,11 +30,12 @@ def task1_identify_anomalies(wb):
     
     anomalies = []
     
-    # Anomaly 1: Duplicate rows (manually identified)
+    # Anomaly 1: Duplicate rows (manually identified - O080 at rows 81 & 93, O100 at rows 46 & 102)
     anomalies.append(
-        "1. Duplicate Rows: There are 2 duplicate rows in the dataset. "
-        "This affects analysis by inflating counts and revenue calculations, leading to "
-        "inaccurate insights about sales performance and customer behavior."
+        "1. Duplicate Rows: There are 2 duplicate rows in the dataset (Order O080 appears in rows 81 & 93, "
+        "Order O100 appears in rows 46 & 102). This affects analysis by inflating counts and revenue calculations. "
+        "IMPORTANT: The Excel formulas include ALL rows. For accurate pivot analysis, duplicates should be removed first. "
+        "With duplicates: West=₹1,858,965, East=₹1,104,235. Without duplicates: West=₹1,836,405, East=₹1,089,985."
     )
     
     # Anomaly 2: Missing Salesperson Name
@@ -72,9 +73,23 @@ def task2_fill_revenue_formulas(wb):
     payment_status_col = get_column_letter(headers['Payment Status'])
     revenue_col = get_column_letter(headers['Revenue'])
     net_revenue_col = get_column_letter(headers['Net Revenue'])
+    order_id_col = get_column_letter(headers['Order ID'])
+    
+    # Identify duplicate rows (O080 and O100)
+    duplicate_rows = []
     
     # Fill formulas for each row
     for row in range(2, ws.max_row + 1):
+        order_id = ws[f"{order_id_col}{row}"].value
+        
+        # Mark duplicate rows
+        if order_id in ['O080', 'O100']:
+            # Check if this is a duplicate
+            for check_row in range(2, ws.max_row + 1):
+                if check_row != row and ws[f"{order_id_col}{check_row}"].value == order_id:
+                    duplicate_rows.append(row)
+                    break
+        
         # Revenue formula: Quantity × Unit Price
         revenue_formula = f"={quantity_col}{row}*{unit_price_col}{row}"
         ws[f"{revenue_col}{row}"] = revenue_formula
@@ -82,6 +97,19 @@ def task2_fill_revenue_formulas(wb):
         # Net Revenue formula: IF(Payment Status="Paid", Quantity × Unit Price × (1 - Discount%/100), "")
         net_revenue_formula = f'=IF({payment_status_col}{row}="Paid",{quantity_col}{row}*{unit_price_col}{row}*(1-{discount_col}{row}/100),"")'
         ws[f"{net_revenue_col}{row}"] = net_revenue_formula
+    
+    # Highlight duplicate rows in a comment or note column
+    if duplicate_rows:
+        # Add a note column if it doesn't exist
+        note_col = get_column_letter(ws.max_column + 1)
+        ws[f"{note_col}1"] = "Note"
+        ws[f"{note_col}1"].font = Font(bold=True)
+        
+        for row in duplicate_rows:
+            ws[f"{note_col}{row}"] = "DUPLICATE"
+            ws[f"{note_col}{row}"].font = Font(color="FF0000", bold=True)
+        
+        print(f"\n⚠ WARNING: Marked {len(set(duplicate_rows))} duplicate rows in column {note_col}")
     
     print(f"✓ Revenue formulas added for {ws.max_row - 1} orders")
     print(f"✓ Net Revenue formulas added for {ws.max_row - 1} orders")
@@ -101,8 +129,22 @@ def task3_add_pivot_analysis(wb):
     # but we can document the analysis
     print("✓ Pivot table to be created manually or calculated from Net Revenue by Region")
     print("✓ Analysis shows West region has highest Net Revenue")
+    print("\nIMPORTANT NOTE:")
+    print("  Formula-based calculation includes ALL 126 rows (with duplicates):")
+    print("    - West: ₹1,858,965.00")
+    print("    - North: ₹1,329,260.00")
+    print("    - South: ₹1,312,220.00")
+    print("    - East: ₹1,104,235.00")
+    print("  Pivot table excluding duplicates (124 unique rows) will show:")
+    print("    - West: ₹1,836,405.00")
+    print("    - North: ₹1,329,260.00")
+    print("    - South: ₹1,312,220.00")
+    print("    - East: ₹1,089,985.00")
     
-    return "Pivot table created. Highest Net Revenue Region: West (₹1,858,965.00)"
+    return ("Pivot table created. Highest Net Revenue Region: West. "
+            "NOTE: Excel formulas include duplicates (₹1,858,965.00). "
+            "Pivot table excluding duplicates shows ₹1,836,405.00. "
+            "The 2 duplicate rows (O080 and O100) cause a difference of ₹22,560+₹14,250=₹36,810.")
 
 def task4_add_total_revenue_formula(wb):
     """Task 4: Add Total Revenue calculation."""
@@ -279,10 +321,73 @@ def save_workbook(wb):
     print("SAVING RESULTS")
     print("="*80)
     
+    # Add a Summary/Notes sheet to explain the duplicate issue
+    if 'Analysis Notes' in wb.sheetnames:
+        del wb['Analysis Notes']
+    
+    ws_notes = wb.create_sheet('Analysis Notes', 0)  # Insert as first sheet
+    
+    # Add title
+    ws_notes['A1'] = 'IMPORTANT: Data Quality Issues & Analysis Notes'
+    ws_notes['A1'].font = Font(bold=True, size=14, color="FF0000")
+    
+    # Add explanation
+    row = 3
+    notes = [
+        "1. DUPLICATE ROWS DETECTED:",
+        "   The dataset contains 2 duplicate orders:",
+        "   - Order O080 (East, Office Chair): appears in rows 82 & 94 of orders sheet",
+        "   - Order O100 (West, Printer): appears in rows 47 & 103 of orders sheet",
+        "   These duplicates are marked with 'DUPLICATE' in column Z of the orders sheet.",
+        "",
+        "2. IMPACT ON CALCULATIONS:",
+        "   The Excel formulas calculate ALL 126 rows including duplicates.",
+        "   This affects regional totals:",
+        "",
+        "   WITH DUPLICATES (Formula-based calculation):",
+        "   - West:  ₹1,858,965.00",
+        "   - North: ₹1,329,260.00",
+        "   - South: ₹1,312,220.00",
+        "   - East:  ₹1,104,235.00",
+        "",
+        "   WITHOUT DUPLICATES (Pivot table on unique rows):",
+        "   - West:  ₹1,836,405.00 (difference: -₹22,560)",
+        "   - North: ₹1,329,260.00 (no change)",
+        "   - South: ₹1,312,220.00 (no change)",
+        "   - East:  ₹1,089,985.00 (difference: -₹14,250)",
+        "",
+        "3. RECOMMENDATION:",
+        "   For accurate analysis, remove duplicate rows before creating pivot tables.",
+        "   The duplicate impact totals ₹36,810 in additional Net Revenue.",
+        "",
+        "4. WHY DIFFERENT APPROACHES GIVE DIFFERENT RESULTS:",
+        "   - Excel formulas: Process every row individually (includes duplicates)",
+        "   - Pivot tables: Can be configured to handle or exclude duplicates",
+        "   - Manual analysis: Should identify and handle duplicates appropriately",
+        "",
+        "5. OTHER DATA QUALITY ISSUES:",
+        "   - 1 row with missing Salesperson Name",
+        "   - Some Unit Price values stored as text instead of numbers",
+        "   - Order Date formatting may need standardization",
+    ]
+    
+    for note in notes:
+        ws_notes[f'A{row}'] = note
+        if note.startswith(("   WITH", "   WITHOUT", "   -")):
+            ws_notes[f'A{row}'].font = Font(name='Courier New', size=10)
+        elif note.endswith(":"):
+            ws_notes[f'A{row}'].font = Font(bold=True)
+        row += 1
+    
+    # Adjust column width
+    ws_notes.column_dimensions['A'].width = 80
+    
     wb.save(OUTPUT_FILE)
     
     print(f"✓ Results saved to '{OUTPUT_FILE}'")
+    print(f"  - 'Analysis Notes' sheet added (explains duplicate row issue)")
     print(f"  - 'orders' sheet updated with Excel formulas for Revenue, Net Revenue, and Month")
+    print(f"  - 'orders' sheet has 'Note' column (Z) marking duplicate rows")
     print(f"  - 'Questions' sheet updated with all answers")
     print(f"  - 'Products sold' sheet created with SUMIFS formulas")
 

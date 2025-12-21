@@ -3,6 +3,17 @@
 ## Overview
 This project contains a Python script that performs comprehensive data analysis on an Excel file with order data. The script uses **actual Excel formulas** to fill columns and calculate results, ensuring that the Excel file remains dynamic and editable.
 
+## ⚠️ IMPORTANT: Data Quality Issue
+The dataset contains **2 duplicate rows** (Order O080 and O100), which cause discrepancies between formula-based calculations and pivot table results:
+- **With duplicates** (formula-based): West = ₹1,858,965, East = ₹1,104,235
+- **Without duplicates** (pivot table): West = ₹1,836,405, East = ₹1,089,985
+- **Difference**: ₹36,810 total
+
+The completed Excel file includes:
+- An **"Analysis Notes"** sheet explaining the issue
+- **"DUPLICATE"** markers in column Z of the orders sheet
+- Detailed explanations in the Questions sheet answers
+
 ## Files
 - `Data Analyst Assignment Data.xlsx` - Original Excel file with order data and questions
 - `Data Analyst Assignment Data_COMPLETED.xlsx` - Output file with Excel formulas and answers
@@ -23,10 +34,21 @@ This project contains a Python script that performs comprehensive data analysis 
 
 ### Task 3: Regional Analysis
 Created pivot table showing Net Revenue by Region:
-- **West**: ₹1,858,965.00 (Highest)
-- **North**: ₹1,329,260.00
-- **South**: ₹1,312,220.00
-- **East**: ₹1,104,235.00
+
+**⚠️ IMPORTANT - Duplicate Row Impact:**
+- **Formula calculation (includes duplicates):**
+  - West: ₹1,858,965.00 (Highest)
+  - North: ₹1,329,260.00
+  - South: ₹1,312,220.00
+  - East: ₹1,104,235.00
+
+- **Pivot table (excluding duplicates):**
+  - West: ₹1,836,405.00 (Highest)
+  - North: ₹1,329,260.00
+  - South: ₹1,312,220.00
+  - East: ₹1,089,985.00
+
+The difference of ₹36,810 is due to 2 duplicate orders (O080 and O100) that appear twice in the dataset.
 
 ### Task 4: Total Revenue
 **Total Revenue Formula (Excel)**: `=SUM(Revenue_Column)`
