@@ -1,12 +1,12 @@
 # Data Analyst Assignment - Excel Data Analysis
 
 ## Overview
-This project contains a Python script that performs comprehensive data analysis on an Excel file with order data. The script addresses all questions from the "Questions" sheet and generates a complete analysis report.
+This project contains a Python script that performs comprehensive data analysis on an Excel file with order data. The script uses **actual Excel formulas** to fill columns and calculate results, ensuring that the Excel file remains dynamic and editable.
 
 ## Files
 - `Data Analyst Assignment Data.xlsx` - Original Excel file with order data and questions
-- `Data Analyst Assignment Data_COMPLETED.xlsx` - Output file with all calculations and answers
-- `data_analysis_script.py` - Python script that performs all analyses
+- `Data Analyst Assignment Data_COMPLETED.xlsx` - Output file with Excel formulas and answers
+- `data_analysis_script.py` - Python script that inserts Excel formulas for all analyses
 
 ## Tasks Completed
 
@@ -16,10 +16,10 @@ This project contains a Python script that performs comprehensive data analysis 
 3. **Data Type Issues**: Unit Price stored as object (string) and Order Date as object instead of proper numeric/datetime types
 
 ### Task 2: Revenue Calculations
-- **Revenue Formula**: Quantity × Unit Price (for all orders)
-- **Net Revenue Formula**: Quantity × Unit Price × (1 - Discount%) (for Paid orders only)
-- All 126 orders have Revenue calculated
-- 108 Paid orders have Net Revenue calculated
+- **Revenue Formula (Excel)**: `=Quantity*Unit_Price` (for all orders)
+- **Net Revenue Formula (Excel)**: `=IF(Payment_Status="Paid",Quantity*Unit_Price*(1-Discount%/100),"")` (for Paid orders only)
+- Excel formulas inserted for all 126 rows
+- Formulas automatically calculate values when Excel file is opened
 
 ### Task 3: Regional Analysis
 Created pivot table showing Net Revenue by Region:
@@ -29,16 +29,19 @@ Created pivot table showing Net Revenue by Region:
 - **East**: ₹1,104,235.00
 
 ### Task 4: Total Revenue
-**Total Revenue** = ₹7,429,500.00
+**Total Revenue Formula (Excel)**: `=SUM(Revenue_Column)`
+Added at the bottom of orders sheet with formula for dynamic calculation
 
 ### Task 5: Payment Status Analysis
-**Unpaid/Pending Orders**: 14.29% (18 out of 126 orders)
+**Unpaid/Pending Orders Formula (Excel)**: `=(COUNTIF(Status,"Unpaid")+COUNTIF(Status,"Pending"))/COUNTA(Status)*100&"%"`
+Added at the bottom of orders sheet with formulas for dynamic calculation
 
 ### Task 6: Time-based Product Analysis
-- **Month Column**: Extracted month names from Order Date
-- **Products Sold Summary**: Created new sheet with monthly product quantities
-- **Highest Selling Product**: Mobile (145 units total)
-- **Peak Sales**: Mobile in March (58 units)
+- **Month Column Formula (Excel)**: `=TEXT(Order_Date,"MMMM")` - Extracts month name
+- **Products Sold Summary**: Created new sheet with `SUMIFS` formulas for monthly product quantities
+- **Formulas**: `=SUMIFS(Quantity,Product,Product_Name,Month,Month_Name)` for each product-month combination
+- **Highest Selling Product**: Mobile (145 units total, calculated by Excel)
+- **Peak Sales**: Mobile in March (58 units, calculated by Excel)
 
 ### Task 7: Discount Impact Analysis
 **Key Findings**:
@@ -62,28 +65,38 @@ python3 data_analysis_script.py
 
 ### Output
 The script generates `Data Analyst Assignment Data_COMPLETED.xlsx` with:
-1. **orders sheet**: Original data with calculated Revenue, Net Revenue, and Month columns
+1. **orders sheet**: Original data with **Excel formulas** in Revenue, Net Revenue, and Month columns
 2. **Questions sheet**: All 7 questions with detailed answers
-3. **Products sold sheet**: Monthly product quantity summary
+3. **Products sold sheet**: Monthly product quantity summary using **SUMIFS formulas**
+4. **Summary section**: Total Revenue and Payment Status formulas at bottom of orders sheet
 
 ## Technical Details
 
-### Data Processing
-- Converted Unit Price from object to numeric type
-- Converted Order Date to datetime for month extraction
-- Handled missing values appropriately (NaN for non-paid orders in Net Revenue)
-- Applied conditional logic for Payment Status-based calculations
+### Excel Formula Implementation
+- Uses `openpyxl` library to insert actual Excel formulas (not calculated values)
+- **Revenue**: Direct multiplication formula `=Quantity*Unit_Price`
+- **Net Revenue**: Conditional formula with IF statement for Paid orders only
+- **Month**: TEXT function to extract month name from date
+- **Products Sold**: SUMIFS formulas for cross-tabulation by product and month
+- **Summary Statistics**: SUM, COUNTIF, and COUNTA formulas for totals and percentages
 
-### Analysis Methods
-- Pandas groupby for aggregations
-- Pivot tables for dimensional analysis
-- Statistical correlation analysis
-- Comprehensive data quality assessment
+### Data Processing
+- Maintains original Excel data types and formatting
+- Inserts formulas that calculate dynamically when Excel file is opened
+- Conditional logic implemented via Excel IF statements
+- All formulas follow Excel syntax and best practices
+
+### Key Advantages
+- **Dynamic**: Values update automatically if source data changes
+- **Transparent**: Users can see and understand the formulas
+- **Editable**: Formulas can be modified directly in Excel
+- **Standard**: Uses native Excel functions (no macros or VBA)
 
 ## Results Summary
-✅ All 7 tasks completed successfully  
+✅ All 7 tasks completed successfully using Excel formulas  
 ✅ Data anomalies identified and documented  
-✅ Revenue calculations performed with proper formulas  
-✅ Regional and temporal analyses completed  
+✅ Revenue calculations performed with Excel formulas (not static values)  
+✅ Regional and temporal analyses completed with dynamic formulas  
 ✅ Statistical insights on discount effectiveness provided  
-✅ Output Excel file generated with all answers  
+✅ Output Excel file generated with fully functional formulas  
+✅ All calculations update automatically when data changes  
