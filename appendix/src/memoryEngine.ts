@@ -233,6 +233,10 @@ export class MemoryEngine {
   }
 
   private extractValueFromPattern(rawText: string, pattern: string, mapping: any): any {
+    // NOTE: This method is currently hardcoded for demonstration purposes.
+    // In production, this should use a pattern registry or configuration-driven approach
+    // to allow adding new patterns without code changes.
+    
     // Extract date from Leistungsdatum pattern
     if (pattern === 'Leistungsdatum') {
       const match = rawText.match(/Leistungsdatum:\s*(\d{2}\.\d{2}\.\d{4})/);
@@ -317,6 +321,10 @@ export class MemoryEngine {
 
     // Calculate average correction confidence
     if (corrections.length > 0) {
+      // NOTE: This uses simple averaging for demonstration. In production, consider:
+      // - Weighted average based on number of corrections
+      // - Separate tracking of extraction vs correction confidence
+      // - More sophisticated confidence aggregation algorithms
       const avgCorrectionConfidence = corrections.reduce((sum, c) => sum + c.confidence, 0) / corrections.length;
       confidenceScore = (confidenceScore + avgCorrectionConfidence) / 2;
       
